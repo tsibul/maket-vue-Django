@@ -1,0 +1,106 @@
+from django.http import JsonResponse
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def dictionary_settings(request):
+    dictionary_structure = [
+        {
+            'name': 'Продукция',
+            'iconUrl': 'pen-to-square',
+            'contents': [
+                {
+                    'name': 'Продукция',
+                    'class': 'Good'
+                },
+                {
+                    'name': 'Детали',
+                    'class': 'DetailItem'
+                },
+                {
+                    'name': 'Наборы изображений',
+                    'class': 'DetailImagesSet'
+                },
+                {
+                    'name': 'Изображения',
+                    'class': 'DetailImage'
+                },
+            ]
+        },
+        {
+            'name': 'Цвета',
+            'iconUrl': 'paintbrush',
+            'contents': [
+                {
+                    'name': 'Цветовая Схема',
+                    'class': 'ColorScheme'
+                },
+                {
+                    'name': 'Цвет',
+                    'class': 'Color'
+                },
+                {
+                    'name': 'Тип Материала',
+                    'class': 'MaterialType'
+                },
+            ]
+        },
+        {
+            'name': 'Печать',
+            'iconUrl': 'paint-roller',
+            'contents': [
+                {
+                    'name': 'Место печати',
+                    'class': 'PrintPlace'
+                },
+                {
+                    'name': 'Расположение печати',
+                    'class': 'PrintPosition'
+                },
+                {
+                    'name': 'Тип печати',
+                    'class': 'PrintType'
+                }
+            ]
+        },
+        {
+            'name': 'Клиенты',
+            'iconUrl': 'sack-xmark',
+            'contents': [
+                {
+                    'name': 'Тип группы',
+                    'class': 'TypeGroup'
+                },
+                {
+                    'name': 'Тип клиента',
+                    'class': 'CustomerType'
+                },
+                {
+                    'name': 'Группы клиентов',
+                    'class': 'CustomerGroup'
+                },
+                {
+                    'name': 'Клиенты',
+                    'class': 'Customer'
+                },
+            ]
+        },
+        {
+            'name': 'География',
+            'iconUrl': 'earth-africa',
+            'contents': [
+                {
+                    'name': 'Федеральный округ',
+                    'class': 'FedRegion'
+                },
+                {
+                    'name': 'Регион — Федеральный округ',
+                    'class': 'RegionToFedRegion'
+                },
+            ]
+        }
+    ]
+    return JsonResponse(dictionary_structure, safe=False)
