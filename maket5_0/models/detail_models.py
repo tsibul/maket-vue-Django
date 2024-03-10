@@ -17,6 +17,17 @@ class DetailImagesSet(SettingsDictionary):
         db_table_comment = 'Set of Detail Images'
         db_table = 'detail_images_set'
 
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'images_quantity',
+                'type': 'string',
+                'label': 'кол-во видов'
+            },
+        ]
+
 
 class DetailItem(SettingsDictionary):
     """Article item
@@ -51,6 +62,49 @@ class DetailItem(SettingsDictionary):
     def order_default():
         return ['good', 'item_position']
 
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'material_type',
+                'type': 'foreign',
+                'label': 'тип материала',
+                'foreignClass': 'MaterialType'
+            },
+            {
+                'field': 'good',
+                'type': 'foreign',
+                'label': 'продукция',
+                'foreignClass': 'Good'
+            },
+            {
+                'field': 'detail_images_set',
+                'type': 'foreign',
+                'label': 'набор видов',
+                'foreignClass': 'DetailImagesSet'
+            },
+            {
+                'field': 'item_position',
+                'type': 'choices',
+                'label': 'позиция группы',
+                'choices': 'Good',
+                'choicesField': 'detail_quantity'
+            },
+            {
+                'field': 'item_position_in_image',
+                'type': 'choices',
+                'label': 'позиция в виде',
+                'choices': 'Good',
+                'choicesField': 'detail_quantity'
+            },
+            {
+                'field': 'for_printing',
+                'type': 'boolean',
+                'label': 'нанесение',
+            },
+        ]
+
 
 class DetailImage(SettingsDictionary):
     """Image for Detail"""
@@ -76,3 +130,33 @@ class DetailImage(SettingsDictionary):
     @staticmethod
     def order_default():
         return ['detail_image_set', 'image_number']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'detail_image_set',
+                'type': 'foreign',
+                'label': 'набор изображений',
+                'foreignClass': 'DetailImagesSet'
+            },
+            {
+                'field': 'image_number',
+                'type': 'choices',
+                'label': 'порядковый номер',
+                'choices': 'DetailImagesSet',
+                'choicesField': 'images_quantity'
+            },
+            {
+                'field': 'print_position',
+                'type': 'foreign',
+                'label': 'место нанесения',
+                'foreignClass': 'PrintPosition'
+            },
+            {
+                'field': 'svg_file',
+                'type': 'svgFile',
+                'label': 'файл изображения',
+            },
+        ]

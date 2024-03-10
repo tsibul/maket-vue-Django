@@ -14,6 +14,18 @@ class ColorScheme(SettingsDictionary):
         db_table_comment = 'Color Scheme (Grant, TetraPak, Italiano Vero etc)'
         db_table = 'color_scheme'
 
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'color_scheme_type',
+                'type': 'foreign',
+                'label': 'тип материала',
+                'foreignClass': 'MaterialType'
+            },
+        ]
+
 
 class Color(SettingsDictionary):
     """ id - (07)
@@ -44,3 +56,34 @@ class Color(SettingsDictionary):
     def order_default():
         return ['color_scheme', 'code']
 
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'code',
+                'type': 'string',
+                'label': 'код'
+            },
+            {
+                'field': 'pantone',
+                'type': 'string',
+                'label': 'pantone'
+            },
+            {
+                'field': 'hex',
+                'type': 'string',
+                'label': 'HEX'
+            },
+            {
+                'field': 'color_scheme',
+                'type': 'foreign',
+                'label': 'цветовая схема',
+                'foreignClass': 'ColorScheme'
+            },
+            {
+                'field': 'standard',
+                'type': 'boolean',
+                'label': 'стандарт',
+            },
+        ]

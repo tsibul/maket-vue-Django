@@ -23,6 +23,18 @@ class RegionToFedRegion(SettingsDictionary):
         db_table_comment = 'Region to Federal Region correspondence'
         db_table = 'region_to_fed_region'
 
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'fed_region',
+                'type': 'foreign',
+                'label': 'федеральный округ',
+                'foreignClass': 'FedRegion'
+            },
+        ]
+
 
 class TypeGroup(SettingsDictionary):
     """ group type agency, dealer etc."""
@@ -47,6 +59,28 @@ class CustomerType(SettingsDictionary):
         db_table_comment = 'Customer Type'
         db_table = 'customer_type'
 
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'group_discount',
+                'type': 'number',
+                'label': 'скидка',
+            },
+            {
+                'field': 'code',
+                'type': 'string',
+                'label': 'код группы',
+            },
+            {
+                'field': 'type_group',
+                'type': 'foreign',
+                'label': 'тип группы',
+                'foreignClass': 'TypeGroup'
+            },
+        ]
+
 
 class CustomerGroup(SettingsDictionary):
     """Customer Group
@@ -64,6 +98,39 @@ class CustomerGroup(SettingsDictionary):
         verbose_name_plural = 'Группы клиентов'
         db_table_comment = 'Customer Group'
         db_table = 'customer_group'
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'customer_type',
+                'type': 'foreign',
+                'label': 'тип клиента',
+                'foreignClass': 'CustomerType'
+            },
+            {
+                'field': 'phone',
+                'type': 'text',
+                'label': 'телефон',
+            },
+            {
+                'field': 'mail',
+                'type': 'string',
+                'label': 'E-mail',
+            },
+            {
+                'field': 'default',
+                'type': 'boolean',
+                'label': 'стандарт',
+            },
+            {
+                'field': 'fed_region',
+                'type': 'foreign',
+                'label': 'федеральный округ',
+                'foreignClass': 'FedRegion'
+            },
+        ]
 
 
 class CustomerGroupFrigateId(models.Model):

@@ -18,3 +18,12 @@ class SettingsDictionary(models.Model):
     @staticmethod
     def order_default():
         return ['name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [{
+                'field': 'name',
+                'type': 'string',
+                'label': 'название'
+            }]
+

@@ -36,3 +36,73 @@ class Customer(models.Model):
     @staticmethod
     def order_default():
         return ['name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'form',
+                'type': 'string',
+                'label': 'форма',
+                'readonly': ''
+            },
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'readonly': ''
+            },
+            {
+                'field': 'address',
+                'type': 'string',
+                'label': 'адрес',
+                'readonly': ''
+            },
+            {
+                'field': 'inn',
+                'type': 'string',
+                'label': 'ИНН',
+                'readonly': ''
+            },
+            {
+                'field': 'region',
+                'type': 'string',
+                'label': 'регион',
+            },
+            {
+                'field': 'customer_group',
+                'type': 'foreign',
+                'label': 'группа',
+                'foreignClass': 'CustomerGroup'
+            },
+            {
+                'field': 'customer_type',
+                'type': 'foreign',
+                'label': 'тип',
+                'foreignClass': 'CustomerType'
+            },
+            {
+                'field': 'frigate_code',
+                'type': 'string',
+                'label': 'фрегат id',
+                'readonly': ''
+            },
+            {
+                'field': 'phone',
+                'type': 'string',
+                'label': 'телефон',
+                'readonly': ''
+            },
+            {
+                'field': 'mail',
+                'type': 'string',
+                'label': 'E-mail',
+                'readonly': ''
+            },
+            {
+                'field': 'fed_region',
+                'type': 'foreign',
+                'label': 'округ',
+                'foreignClass': 'FedRegion',
+            },
+        ]
