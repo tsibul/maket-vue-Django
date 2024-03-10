@@ -33,19 +33,19 @@ def dictionary_menu_structure():
             'contents': [
                 {
                     'name': 'Продукция',
-                    'class': 'Good'
+                    'class': 'Good',
                 },
                 {
                     'name': 'Детали',
-                    'class': 'DetailItem'
+                    'class': 'DetailItem',
                 },
                 {
                     'name': 'Наборы изображений',
-                    'class': 'DetailImagesSet'
+                    'class': 'DetailImagesSet',
                 },
                 {
                     'name': 'Изображения',
-                    'class': 'DetailImage'
+                    'class': 'DetailImage',
                 },
             ]
         },
@@ -55,15 +55,16 @@ def dictionary_menu_structure():
             'contents': [
                 {
                     'name': 'Цветовая Схема',
-                    'class': 'ColorScheme'
+                    'class': 'ColorScheme',
                 },
                 {
                     'name': 'Цвет',
-                    'class': 'Color'
+                    'class': 'Color',
                 },
                 {
                     'name': 'Тип Материала',
-                    'class': 'MaterialType'
+                    'class': 'MaterialType',
+
                 },
             ]
         },
@@ -73,15 +74,16 @@ def dictionary_menu_structure():
             'contents': [
                 {
                     'name': 'Место печати',
-                    'class': 'PrintPlace'
+                    'class': 'PrintPlace',
+
                 },
                 {
                     'name': 'Расположение печати',
-                    'class': 'PrintPosition'
+                    'class': 'PrintPosition',
                 },
                 {
                     'name': 'Тип печати',
-                    'class': 'PrintType'
+                    'class': 'PrintType',
                 }
             ]
         },
@@ -91,19 +93,19 @@ def dictionary_menu_structure():
             'contents': [
                 {
                     'name': 'Тип группы',
-                    'class': 'TypeGroup'
+                    'class': 'TypeGroup',
                 },
                 {
                     'name': 'Тип клиента',
-                    'class': 'CustomerType'
+                    'class': 'CustomerType',
                 },
                 {
                     'name': 'Группы клиентов',
-                    'class': 'CustomerGroup'
+                    'class': 'CustomerGroup',
                 },
                 {
                     'name': 'Клиенты',
-                    'class': 'Customer'
+                    'class': 'Customer',
                 },
             ]
         },
@@ -113,11 +115,11 @@ def dictionary_menu_structure():
             'contents': [
                 {
                     'name': 'Федеральный округ',
-                    'class': 'FedRegion'
+                    'class': 'FedRegion',
                 },
                 {
                     'name': 'Регион — Федеральный округ',
-                    'class': 'RegionToFedRegion'
+                    'class': 'RegionToFedRegion',
                 },
             ]
         }
