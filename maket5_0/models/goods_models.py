@@ -10,13 +10,13 @@ class Good(SettingsDictionary):
         article - item code
         color_scheme - main color scheme"""
 
-    article = models.CharField(max_length=30, null=True, blank=True)
-    color_scheme = models.ForeignKey(ColorScheme, models.SET_NULL, null=True)
-    detail_quantity = models.SmallIntegerField(default=1)
+    article = models.CharField(max_length=30, null=True, blank=True, verbose_name='артикул')
+    color_scheme = models.ForeignKey(ColorScheme, models.SET_NULL, null=True, verbose_name='цветовая схема')
+    detail_quantity = models.SmallIntegerField(default=1, verbose_name='количество деталей')
 
     class Meta(SettingsDictionary.Meta):
-        verbose_name = "товар"
-        verbose_name_plural = "товары"
+        verbose_name = "продукция"
+        verbose_name_plural = "продукция"
         ordering = ['article']
         db_table_comment = 'Goods'
         db_table = 'goods'
@@ -30,3 +30,25 @@ class Good(SettingsDictionary):
     @staticmethod
     def order_default():
         return ['article']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'article',
+                'type': 'text',
+                'label': 'артикул',
+            },
+            {
+                'field': 'color_scheme',
+                'type': 'foreign',
+                'label': 'цветовая схема',
+                'foreignClass': 'ColorScheme'
+            },
+            {
+                'field': 'detail_quantity',
+                'type': 'text',
+                'label': 'количество деталей',
+            },
+        ]
