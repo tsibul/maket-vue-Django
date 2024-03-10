@@ -3,11 +3,30 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from maket5_0 import models
+
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def dictionary_settings(request):
-    dictionary_structure = [
+    dictionary_structure = dictionary_menu_structure()
+    return JsonResponse(dictionary_structure, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def fields_structure(request):
+    menu_structure = dictionary_menu_structure()
+    fields = {}
+    for clause in menu_structure:
+        for dictionary in clause['contents']:
+            current_class = getattr(models, dictionary['class'])
+            fields.update({dictionary['class']: current_class.dictionary_fields()})
+    return JsonResponse(fields, safe=False)
+
+
+def dictionary_menu_structure():
+    return [
         {
             'name': 'Продукция',
             'iconUrl': 'pen-to-square',
@@ -103,4 +122,3 @@ def dictionary_settings(request):
             ]
         }
     ]
-    return JsonResponse(dictionary_structure, safe=False)

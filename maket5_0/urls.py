@@ -10,7 +10,8 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('accounts/log_status/', LogStatusView.as_view(), name='log_status'),
-    path('settings/structure/', views.dictionary_settings, name='structure')
+    path('settings/structure/', views.dictionary_settings, name='structure'),
+    path('settings/fields/', views.fields_structure, name='fields_structure'),
 
     # path('', views.index, name='index'),
     #
