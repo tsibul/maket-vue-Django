@@ -84,7 +84,7 @@ class Customer(models.Model):
             {
                 'field': 'frigate_code',
                 'type': 'string',
-                'label': 'фрегат id',
+                'label': 'fr id',
                 'readonly': ''
             },
             {
