@@ -49,6 +49,6 @@ class Good(SettingsDictionary):
             {
                 'field': 'detail_quantity',
                 'type': 'text',
-                'label': 'количество деталей',
+                'label': 'кол-во деталей',
             },
         ]
