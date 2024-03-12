@@ -40,7 +40,7 @@ class Color(SettingsDictionary):
         ordering = ['color_scheme', 'code']
         db_table = 'color'
 
-    code = models.CharField(max_length=10, unique=True, verbose_name='код')
+    code = models.CharField(max_length=10, verbose_name='код')
     pantone = models.CharField(max_length=20, default='', verbose_name='PANTONE', null=True, blank=True)
     hex = models.CharField(max_length=7, verbose_name='HEX', null=True, blank=True)
     color_scheme = models.ForeignKey(ColorScheme, models.SET_NULL, null=True, verbose_name='цветовая схема')
