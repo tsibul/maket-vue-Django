@@ -37,7 +37,7 @@ class Good(SettingsDictionary):
             SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'article',
-                'type': 'text',
+                'type': 'string',
                 'label': 'артикул',
             },
             {
@@ -48,7 +48,7 @@ class Good(SettingsDictionary):
             },
             {
                 'field': 'detail_quantity',
-                'type': 'text',
+                'type': 'string',
                 'label': 'кол-во деталей',
             },
         ]

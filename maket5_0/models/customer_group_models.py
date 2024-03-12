@@ -111,7 +111,7 @@ class CustomerGroup(SettingsDictionary):
             },
             {
                 'field': 'phone',
-                'type': 'text',
+                'type': 'string',
                 'label': 'телефон',
             },
             {
