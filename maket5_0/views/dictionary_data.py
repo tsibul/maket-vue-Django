@@ -12,7 +12,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 def dictionary_records(request, dict_type, id_no, order, search_string, sh_deleted):
     dict_items = dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted)
     # formatted_dict_items = [format_datetime_fields(item) for item in dict_items]
-    return JsonResponse(dict_items, safe=False)
+    return JsonResponse(list(dict_items), safe=False)
 
 
 def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
@@ -20,27 +20,40 @@ def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
     order_calculated = dict_model.order_default()
     if order != 'default':
         order_calculated = order
-    dict_items = dict_model.objects.All().order_by(*order_calculated)
-    if sh_deleted == '0':
+    dict_items = dict_model.objects.all().order_by(*order_calculated)
+    if sh_deleted == 0:
         dict_items = dict_items.filter(deleted=False)
-    if search_string == 'default' and dict_type == 'CustomerGroup':
-        dict_items = dict_items.filter(default=False)
-    else:
+    if search_string == 'default':
+        if dict_type == 'CustomerGroup':
+            dict_items = dict_items.filter(default=False)
+    if search_string != 'default':
         search_string = search_string.replace('_', ' ')
         filter_items = dict_items
         dict_items = filter_items.filter(id=0)
         for field in dict_model.dictionary_fields():
-            if field.type == 'text':
-                field_name = field.field + '__icontains'
+            if field['type'] == 'string':
+                field_name = field['field'] + '__icontains'
                 dict_items = dict_items | filter_items.filter(**{field_name: search_string})
-            elif field.type == 'foreign':
-                foreign_model = getattr(models, field.foreignClass)
+            elif field['type'] == 'foreign':
+                foreign_model = getattr(models, field['foreignClass'])
                 for key in foreign_model.dictionary_fields():
-                    if key.type == 'text':
-                        field_name = field.field + '__' + key.field + '__icontains'
+                    if key['type'] == 'text':
+                        field_name = field['field'] + '__' + key['field'] + '__icontains'
                         dict_items = dict_items | filter_items.filter(**{field_name: search_string})
     dict_items = dict_items.distinct()[id_no: id_no + 20]
-    return dict_items
+    output = []
+    for item in dict_items:
+        current_dict = {'id': item.id, 'fields': [] }
+        for field in dict_model.dictionary_fields():
+            if field['type'] == 'boolean':
+                result = 'да' if getattr(item, field['field']) else 'нет'
+                current_dict['fields'].append(result)
+            elif field['type'] != 'foreign':
+                current_dict['fields'].append(getattr(item, field['field']))
+            else:
+                current_dict['fields'].append(str(getattr(item, field['field'])))
+        output.append(current_dict)
+    return output
 
 
 def format_datetime_fields(item):
