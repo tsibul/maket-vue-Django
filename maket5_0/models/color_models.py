@@ -59,12 +59,12 @@ class Color(SettingsDictionary):
     @staticmethod
     def dictionary_fields():
         return [
-            SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'code',
                 'type': 'string',
                 'label': 'код'
             },
+            SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'pantone',
                 'type': 'string',

@@ -34,12 +34,12 @@ class Good(SettingsDictionary):
     @staticmethod
     def dictionary_fields():
         return [
-            SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'article',
                 'type': 'string',
                 'label': 'артикул',
             },
+            SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'color_scheme',
                 'type': 'foreign',
