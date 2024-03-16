@@ -19,6 +19,7 @@ class Customer(models.Model):
     mail = models.CharField(max_length=255, null=True, blank=True, verbose_name='E-mail')
     fed_region = models.ForeignKey(FedRegion, models.SET_NULL, null=True, default=None,
                                    verbose_name='федеральный округ')
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Клиент'
@@ -68,13 +69,15 @@ class Customer(models.Model):
                 'field': 'region',
                 'type': 'string',
                 'label': 'регион',
-                'null': False
+                'null': False,
+                'readonly': 'true'
             },
             {
                 'field': 'customer_group',
                 'type': 'foreign',
                 'label': 'группа',
-                'foreignClass': 'CustomerGroup'
+                'foreignClass': 'CustomerGroup',
+                'readonly': 'true'
             },
             {
                 'field': 'customer_type',
