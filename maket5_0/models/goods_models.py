@@ -22,10 +22,10 @@ class Good(SettingsDictionary):
         db_table = 'goods'
 
     def __repr__(self):
-        return self.article
+        return self.article + ' ' + self.name
 
     def __str__(self):
-        return str(self.article)
+        return str(self.article) + ' ' + str(self.name)
 
     @staticmethod
     def order_default():
@@ -38,17 +38,21 @@ class Good(SettingsDictionary):
                 'field': 'article',
                 'type': 'string',
                 'label': 'артикул',
+                'null': False
             },
             SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'color_scheme',
                 'type': 'foreign',
                 'label': 'цветовая схема',
-                'foreignClass': 'ColorScheme'
+                'foreignClass': 'ColorScheme',
+                'null': False
             },
             {
                 'field': 'detail_quantity',
                 'type': 'string',
                 'label': 'кол-во деталей',
+                'null': False,
+                'number': True
             },
         ]
