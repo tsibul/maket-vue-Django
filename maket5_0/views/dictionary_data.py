@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.http import JsonResponse
@@ -6,6 +7,8 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from maket5_0.service_functions import linking_filter
+
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
@@ -13,6 +16,34 @@ def dictionary_records(request, dict_type, id_no, order, search_string, sh_delet
     dict_items = dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted)
     # formatted_dict_items = [format_datetime_fields(item) for item in dict_items]
     return JsonResponse(list(dict_items), safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def dictionary_filter(request, dict_type, filter_dictionary, filter_dictionary_id):
+    """
+    Using for table connection if we find item in second table in second table
+    filter parent table by it
+    :param request:
+    :param dict_type:
+    :param filter_dictionary:
+    :param filter_dictionary_id:
+    :return:
+    """
+    if dict_type == 'default':
+        formatted_dict_items = []
+        json_dict = json.dumps(formatted_dict_items, ensure_ascii=False, default=str)
+        return JsonResponse(json_dict, safe=False)
+    dict_model = getattr(models, dict_type)
+    if filter_dictionary != 'default':
+        filter_model = getattr(models, filter_dictionary)
+        filter_item = linking_filter(dict_model, filter_model, filter_dictionary_id)
+    else:
+        filter_item = dict_model.objects.filter(deleted=False)
+        if dict_type == 'CustomerGroup':
+            filter_item = filter_item.filter(default=False)
+    formatted_dict_items = [{item.id: str(item)} for item in filter_item]
+    return JsonResponse(formatted_dict_items, safe=False)
 
 
 def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):

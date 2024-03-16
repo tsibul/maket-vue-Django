@@ -15,5 +15,7 @@ urlpatterns = [
 
     path('dictionary_data/<str:dict_type>/<int:id_no>/<str:order>/<str:search_string>/<int:sh_deleted>',
          views.dictionary_records, name='dictionary_records'),
+    path('dictionary_filter/<str:dict_type>/<str:filter_dictionary>/<int:filter_dictionary_id>',
+         views.dictionary_filter, name='dictionary_json_filter'),
 
 ]
