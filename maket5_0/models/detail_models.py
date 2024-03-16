@@ -24,7 +24,9 @@ class DetailImagesSet(SettingsDictionary):
             {
                 'field': 'images_quantity',
                 'type': 'string',
-                'label': 'кол-во видов'
+                'label': 'кол-во видов',
+                'number': True,
+                'null': False
             },
         ]
 
@@ -70,13 +72,15 @@ class DetailItem(SettingsDictionary):
                 'field': 'material_type',
                 'type': 'foreign',
                 'label': 'тип материала',
-                'foreignClass': 'MaterialType'
+                'foreignClass': 'MaterialType',
+                'null': False
             },
             {
                 'field': 'good',
                 'type': 'foreign',
                 'label': 'продукция',
-                'foreignClass': 'Good'
+                'foreignClass': 'Good',
+                'null': False
             },
             {
                 'field': 'detail_images_set',
@@ -89,26 +93,30 @@ class DetailItem(SettingsDictionary):
                 'type': 'choices',
                 'label': 'позиция группы',
                 'choices': 'Good',
-                'choicesField': 'detail_quantity'
+                'choicesField': 'detail_quantity',
+                'null': False
             },
             {
                 'field': 'item_position_in_image',
                 'type': 'choices',
                 'label': 'позиция в виде',
                 'choices': 'Good',
-                'choicesField': 'detail_quantity'
+                'choicesField': 'detail_quantity',
+                'null': False
             },
             {
                 'field': 'for_printing',
                 'type': 'boolean',
                 'label': 'нанесение',
+                'null': False
             },
         ]
 
 
 class DetailImage(SettingsDictionary):
     """Image for Detail"""
-    detail_image_set = models.ForeignKey(DetailImagesSet, on_delete=models.CASCADE, verbose_name='набор изображений')
+    detail_image_set = models.ForeignKey(DetailImagesSet, on_delete=models.CASCADE,
+                                         verbose_name='набор изображений')
     image_number = models.IntegerField(choices=[], verbose_name='порядковый номер')
     print_position = models.ForeignKey(PrintPosition, models.SET_NULL, verbose_name='место нанесения', null=True)
     svg_file = models.FileField(storage=fs_detail_images, null=True, blank=True, verbose_name='файл изображения')

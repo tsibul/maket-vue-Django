@@ -22,8 +22,8 @@ class SettingsDictionary(models.Model):
     @staticmethod
     def dictionary_fields():
         return [{
-                'field': 'name',
-                'type': 'string',
-                'label': 'название'
-            }]
-
+            'field': 'name',
+            'type': 'string',
+            'label': 'название',
+            'null': False
+        }]

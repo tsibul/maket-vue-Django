@@ -44,30 +44,31 @@ class Customer(models.Model):
                 'field': 'form',
                 'type': 'string',
                 'label': 'форма',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'name',
                 'type': 'string',
                 'label': 'название',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'address',
                 'type': 'string',
                 'label': 'адрес',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'inn',
                 'type': 'string',
                 'label': 'ИНН',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'region',
                 'type': 'string',
                 'label': 'регион',
+                'null': False
             },
             {
                 'field': 'customer_group',
@@ -85,19 +86,19 @@ class Customer(models.Model):
                 'field': 'frigate_code',
                 'type': 'string',
                 'label': 'fr id',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'phone',
                 'type': 'string',
                 'label': 'телефон',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'mail',
                 'type': 'string',
                 'label': 'E-mail',
-                'readonly': ''
+                'readonly': 'true'
             },
             {
                 'field': 'fed_region',

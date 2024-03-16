@@ -67,11 +67,14 @@ class CustomerType(SettingsDictionary):
                 'field': 'group_discount',
                 'type': 'number',
                 'label': 'скидка',
+                'null': False,
+                'number': True
             },
             {
                 'field': 'code',
                 'type': 'string',
                 'label': 'код группы',
+                'null': False
             },
             {
                 'field': 'type_group',
@@ -123,6 +126,7 @@ class CustomerGroup(SettingsDictionary):
                 'field': 'default',
                 'type': 'boolean',
                 'label': 'стандарт',
+                'null': False
             },
             {
                 'field': 'fed_region',

@@ -47,10 +47,10 @@ class Color(SettingsDictionary):
     standard = models.BooleanField(default=True, verbose_name='стандарт')
 
     def __repr__(self):
-        return str(self.code + ', ' + self.color_scheme.name)
+        return str(self.code + ' ' + self.name + ', ' + self.color_scheme.name)
 
     def __str__(self):
-        return str(self.code + ', ' + self.color_scheme.name)
+        return str(self.code + ' ' + self.name + ', ' + self.color_scheme.name)
 
     @staticmethod
     def order_default():
@@ -62,18 +62,21 @@ class Color(SettingsDictionary):
             {
                 'field': 'code',
                 'type': 'string',
-                'label': 'код'
+                'label': 'код',
+                'null': False
             },
             SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'pantone',
                 'type': 'string',
-                'label': 'pantone'
+                'label': 'pantone',
+                'null': False
             },
             {
                 'field': 'hex',
                 'type': 'string',
-                'label': 'HEX'
+                'label': 'HEX',
+                'null': False
             },
             {
                 'field': 'color_scheme',
