@@ -42,7 +42,17 @@ def dictionary_filter(request, dict_type, filter_dictionary, filter_dictionary_i
         filter_item = dict_model.objects.filter(deleted=False)
         if dict_type == 'CustomerGroup':
             filter_item = filter_item.filter(default=False)
-    formatted_dict_items = [{item.id: str(item)} for item in filter_item]
+    choices_field = None
+    for field in dict_model.dictionary_fields():
+        try:
+            field['emitChoices']
+            choices_field = field['field']
+        except:
+            pass
+    if choices_field:
+        formatted_dict_items = [{item.id: str(item), 'choices': getattr(item, choices_field)} for item in filter_item]
+    else:
+        formatted_dict_items = [{item.id: str(item)} for item in filter_item]
     return JsonResponse(formatted_dict_items, safe=False)
 
 
