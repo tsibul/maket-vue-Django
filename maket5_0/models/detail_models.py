@@ -26,7 +26,8 @@ class DetailImagesSet(SettingsDictionary):
                 'type': 'string',
                 'label': 'кол-во видов',
                 'number': True,
-                'null': False
+                'null': False,
+                'emitChoices': True
             },
         ]
 

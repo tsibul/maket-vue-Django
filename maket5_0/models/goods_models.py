@@ -53,6 +53,7 @@ class Good(SettingsDictionary):
                 'type': 'string',
                 'label': 'кол-во деталей',
                 'null': False,
-                'number': True
+                'number': True,
+                'emitChoices': True
             },
         ]
