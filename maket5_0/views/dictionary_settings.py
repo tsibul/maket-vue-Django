@@ -34,6 +34,7 @@ def dictionary_menu_structure():
                 {
                     'name': 'Продукция',
                     'class': 'Good',
+                    'emitChoices': True
                 },
                 {
                     'name': 'Детали',
@@ -42,6 +43,7 @@ def dictionary_menu_structure():
                 {
                     'name': 'Наборы изображений',
                     'class': 'DetailImagesSet',
+                    'emitChoices': True
                 },
                 {
                     'name': 'Изображения',
