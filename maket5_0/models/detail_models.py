@@ -53,13 +53,21 @@ class DetailItem(SettingsDictionary):
         db_table = 'article_item'
         ordering = ['good', 'item_position']
 
-    def __init__(self, *args, **kwargs):
-        super(DetailItem, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super(DetailItem, self).__init__(*args, **kwargs)
+    #     if self.good:
+    #         good = Good.objects.get(pk=self.good.pk)
+    #         choices = [(i, str(i)) for i in range(0, good.detail_quantity + 1)]
+    #         self._meta.get_field('item_position').choices = choices
+    #         self._meta.get_field('item_position_in_image').choices = choices
+
+    def save(self, *args, **kwargs):
         if self.good:
             good = Good.objects.get(pk=self.good.pk)
             choices = [(i, str(i)) for i in range(0, good.detail_quantity + 1)]
             self._meta.get_field('item_position').choices = choices
             self._meta.get_field('item_position_in_image').choices = choices
+        super(DetailItem, self).save(*args, **kwargs)
 
     @staticmethod
     def order_default():
@@ -129,12 +137,19 @@ class DetailImage(SettingsDictionary):
         db_table = 'detail_image'
         ordering = ['detail_image_set', 'image_number']
 
-    def __init__(self, *args, **kwargs):
-        super(DetailImage, self).__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     super(DetailImage, self).__init__(*args, **kwargs)
+    #     if self.detail_image_set:
+    #         detail_image_set = DetailImagesSet.objects.get(pk=self.detail_image_set.pk)
+    #         choices = [(i, str(i)) for i in range(0, detail_image_set.images_quantity + 1)]
+    #         self._meta.get_field('image_number').choices = choices
+
+    def save(self, *args, **kwargs):
         if self.detail_image_set:
             detail_image_set = DetailImagesSet.objects.get(pk=self.detail_image_set.pk)
             choices = [(i, str(i)) for i in range(0, detail_image_set.images_quantity + 1)]
             self._meta.get_field('image_number').choices = choices
+        super(DetailImage, self).save(*args, **kwargs)
 
     @staticmethod
     def order_default():
