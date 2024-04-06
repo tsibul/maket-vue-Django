@@ -1,9 +1,9 @@
 import json
 from datetime import datetime
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from maket5_0 import models
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -56,6 +56,31 @@ def dictionary_filter(request, dict_type, filter_dictionary, filter_dictionary_i
     return JsonResponse(formatted_dict_items, safe=False)
 
 
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def dictionary_update(request, dict_type):
+    dict_id = request.data['id']
+    dict_model = getattr(models, dict_type)
+    field_list = dict_model.dictionary_fields()
+    if dict_id != '0':
+        dict_element = dict_model.objects.get(id=dict_id)
+    else:
+        dict_element = dict_model()
+    for field in field_list:
+        request_data = request.data[field['field']]
+        if field['type'] == 'string':
+            setattr(dict_element, field['field'], request_data)
+        elif field['type'] == 'boolean':
+            setattr(dict_element, field['field'], request_data)
+        elif field['type'] == 'foreign':
+            foreign_model = getattr(models, field['foreignClass'])
+            foreign_element = foreign_model.objects.get(id=request_data)
+            setattr(dict_element, field['field'], foreign_element)
+    dict_element.save()
+    return JsonResponse({'id': dict_element.id})
+
+
 def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
     dict_model = getattr(models, dict_type)
     order_calculated = dict_model.order_default()
@@ -84,7 +109,7 @@ def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
     dict_items = dict_items.distinct()[id_no: id_no + 20]
     output = []
     for item in dict_items:
-        current_dict = {'id': item.id, 'fields': [] }
+        current_dict = {'id': item.id, 'fields': []}
         for field in dict_model.dictionary_fields():
             if field['type'] == 'boolean':
                 result = 'да' if getattr(item, field['field']) else 'нет'
@@ -118,3 +143,28 @@ def format_datetime_fields(item):
                     else:
                         formatted_item[field[0:-3]] = str(getattr(item, field[0:-3]))
     return formatted_item
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def dictionary_single_record(request, dict_type, record_id):
+    """
+
+    :param request:
+    :param dict_type:
+    :param record_id:
+    :return:
+    """
+    dict_model = getattr(models, dict_type)
+    record = dict_model.objects.get(id=record_id)
+    fields = dict_model.dictionary_fields()
+    record_data = {}
+    for field in fields:
+        if field['type'] == 'foreign':
+            field_object = getattr(record, field['field'])
+            record_data.update({field['field'] + '_id': field_object.id})
+            record_data.update({field['field']: field_object.name})
+        else:
+            record_data.update({field['field']: getattr(record, field['field'])})
+
+    return JsonResponse(record_data, safe=False)
