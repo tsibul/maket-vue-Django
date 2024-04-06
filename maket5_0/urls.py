@@ -21,5 +21,7 @@ urlpatterns = [
          views.dictionary_single_record, name='dictionary_record'),
     path('dictionary_update/<str:dict_type>',
          views.dictionary_update, name='dictionary_update'),
+    path('dictionary_delete/<str:dict_type>/<int:record_id>',
+         views.dictionary_delete, name='dictionary_delete'),
 
 ]

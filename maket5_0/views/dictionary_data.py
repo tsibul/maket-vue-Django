@@ -81,6 +81,22 @@ def dictionary_update(request, dict_type):
     return JsonResponse({'id': dict_element.id})
 
 
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def dictionary_delete(request, dict_type, record_id):
+    """
+
+    :param request:
+    :param dict_type:
+    :param record_id:
+    :return:
+    """
+    dict_model = getattr(models, dict_type)
+    record = dict_model.objects.get(id=record_id)
+    record.deleted = True
+    return JsonResponse({'id': record.id})
+
+
 def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
     dict_model = getattr(models, dict_type)
     order_calculated = dict_model.order_default()
