@@ -69,7 +69,7 @@ def dictionary_update(request, dict_type):
         dict_element = dict_model()
     for field in field_list:
         request_data = request.data[field['field']]
-        if field['type'] == 'string':
+        if field['type'] == 'string' or field['type'] == 'choices':
             setattr(dict_element, field['field'], request_data)
         elif field['type'] == 'boolean':
             setattr(dict_element, field['field'], request_data)
@@ -179,8 +179,9 @@ def dictionary_single_record(request, dict_type, record_id):
     for field in fields:
         if field['type'] == 'foreign':
             field_object = getattr(record, field['field'])
-            record_data.update({field['field'] + '_id': field_object.id})
-            record_data.update({field['field']: field_object.name})
+            if field_object:
+                record_data.update({field['field'] + '_id': field_object.id})
+                record_data.update({field['field']: str(field_object)})
         else:
             record_data.update({field['field']: getattr(record, field['field'])})
 
