@@ -82,7 +82,8 @@ class Color(SettingsDictionary):
                 'field': 'color_scheme',
                 'type': 'foreign',
                 'label': 'цветовая схема',
-                'foreignClass': 'ColorScheme'
+                'foreignClass': 'ColorScheme',
+                'null': False
             },
             {
                 'field': 'standard',
