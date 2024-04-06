@@ -94,6 +94,7 @@ def dictionary_delete(request, dict_type, record_id):
     dict_model = getattr(models, dict_type)
     record = dict_model.objects.get(id=record_id)
     record.deleted = True
+    record.save()
     return JsonResponse({'id': record.id})
 
 
