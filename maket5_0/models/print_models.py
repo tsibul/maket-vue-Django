@@ -15,8 +15,8 @@ class PrintPlace(SettingsDictionary):
     """ Print Place from Import"""
 
     class Meta(SettingsDictionary.Meta):
-        verbose_name = 'место нанесения'
-        verbose_name_plural = 'места нанесения'
+        verbose_name = 'место нанесения (деталь)'
+        verbose_name_plural = 'места нанесения (детали)'
         db_table_comment = 'Print Place'
         db_table = 'print_place'
 
@@ -25,7 +25,7 @@ class PrintPosition(SettingsDictionary):
     """ Print Position from Maket"""
 
     class Meta(SettingsDictionary.Meta):
-        verbose_name = 'положение нанесения'
-        verbose_name_plural = 'положения печати'
+        verbose_name = 'ориентация нанесения'
+        verbose_name_plural = 'ориентации печати'
         db_table_comment = 'Print Position'
         db_table = 'print_position'
