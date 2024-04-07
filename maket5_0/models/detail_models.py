@@ -101,7 +101,7 @@ class DetailItem(SettingsDictionary):
                 'field': 'item_position',
                 'type': 'choices',
                 'label': 'позиция группы',
-                'choices': 'Good',
+                'choices': 'good',
                 'choicesField': 'detail_quantity',
                 'null': False
             },
@@ -109,7 +109,7 @@ class DetailItem(SettingsDictionary):
                 'field': 'item_position_in_image',
                 'type': 'choices',
                 'label': 'позиция в виде',
-                'choices': 'Good',
+                'choices': 'good',
                 'choicesField': 'detail_quantity',
                 'null': False
             },
@@ -169,7 +169,7 @@ class DetailImage(SettingsDictionary):
                 'field': 'image_number',
                 'type': 'choices',
                 'label': 'порядковый номер',
-                'choices': 'DetailImagesSet',
+                'choices': 'detailI_mages_set',
                 'choicesField': 'images_quantity'
             },
             {
