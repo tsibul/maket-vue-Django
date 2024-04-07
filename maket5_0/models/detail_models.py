@@ -6,6 +6,17 @@ from maket5_0.models import SettingsDictionary, Good, MaterialType, PrintPositio
 fs_detail_images = FileSystemStorage(location='files/detail_images')
 
 
+class DetailType(SettingsDictionary):
+    """
+    Set of detail types
+    """
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Тип детали'
+        verbose_name_plural = 'Типы деталей'
+        db_table_comment = 'Set of Detail Types'
+        db_table = 'detail_types'
+
+
 class DetailImagesSet(SettingsDictionary):
     """Set of Images of each detail
     images_quantity — size of images set"""
@@ -37,7 +48,9 @@ class DetailItem(SettingsDictionary):
     attributes_group_type — color scheme type
     item_position — position of item in article (divided by '.')
     item_position_in_image — position of item in good picture
-    images_quantity - number of view variants for item"""
+    images_quantity - number of view variants for item
+    detail_type - type of detail item
+    """
     material_type = models.ForeignKey(MaterialType, on_delete=models.SET_NULL, null=True)
     good = models.ForeignKey(Good, on_delete=models.CASCADE, verbose_name='продукция')
     detail_images_set = models.ForeignKey(DetailImagesSet, models.SET_NULL, null=True, verbose_name='набор изображений',
@@ -45,6 +58,7 @@ class DetailItem(SettingsDictionary):
     item_position = models.IntegerField(choices=[], verbose_name='позиция группы артикула')
     item_position_in_image = models.IntegerField(choices=[], verbose_name='позиция в сборке')
     for_printing = models.BooleanField(default=True, verbose_name='нанесение')
+    detail_type = models.ForeignKey(DetailType, on_delete=models.SET_NULL, null=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Элемент артикула'
@@ -96,6 +110,12 @@ class DetailItem(SettingsDictionary):
                 'type': 'foreign',
                 'label': 'набор видов',
                 'foreignClass': 'DetailImagesSet'
+            },
+            {
+                'field': 'detail_type',
+                'type': 'foreign',
+                'label': 'тип детали',
+                'foreignClass': 'DetailType'
             },
             {
                 'field': 'item_position',

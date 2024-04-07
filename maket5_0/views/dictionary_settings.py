@@ -46,6 +46,10 @@ def dictionary_menu_structure():
                     'emitChoices': True
                 },
                 {
+                    'name': 'Типы деталей',
+                    'class': 'DetailType',
+                },
+                {
                     'name': 'Изображения',
                     'class': 'DetailImage',
                 },
@@ -75,12 +79,12 @@ def dictionary_menu_structure():
             'iconUrl': 'paint-roller',
             'contents': [
                 {
-                    'name': 'Место печати',
+                    'name': 'Место печати (деталь)',
                     'class': 'PrintPlace',
 
                 },
                 {
-                    'name': 'Расположение печати',
+                    'name': 'Ориентация печати',
                     'class': 'PrintPosition',
                 },
                 {
