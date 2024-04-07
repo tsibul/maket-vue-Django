@@ -6,3 +6,6 @@ from maket5_0.models.goods_models import *
 from maket5_0.models.detail_models import *
 from maket5_0.models.customer_group_models import *
 from maket5_0.models.customer_models import *
+from maket5_0.models.order_models import *
+
+
