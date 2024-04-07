@@ -24,4 +24,9 @@ urlpatterns = [
     path('dictionary_delete/<str:dict_type>/<int:record_id>',
          views.dictionary_delete, name='dictionary_delete'),
 
+    path('order/<int:id_no>/<str:order>/<str:search_string>/<int:sh_deleted>',
+         views.show_orders, name='orders'),
+    path('import_order', views.import_order, name='import_order'),
+    path('delete_order/<int:order_no>', views.delete_order, name='delete_order'),
+
 ]
