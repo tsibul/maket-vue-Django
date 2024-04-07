@@ -1,5 +1,5 @@
 from django.db import models
-from maket5_0.models import CustomerType, CustomerGroup, FedRegion
+from maket5_0.models import CustomerType, CustomerGroup, FedRegion, SettingsDictionary
 
 
 class Customer(models.Model):
@@ -108,5 +108,41 @@ class Customer(models.Model):
                 'type': 'foreign',
                 'label': 'округ',
                 'foreignClass': 'FedRegion',
+            },
+        ]
+
+
+class Manager(SettingsDictionary):
+    """Customer managers """
+    phone = models.CharField(max_length=50, blank=True, null=True, default='')
+    mail = models.CharField(max_length=50, blank=True, null=True, default='')
+    customer_group = models.ForeignKey(CustomerGroup, models.SET_NULL, null=True, default=None,)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Менеджер клиента'
+        verbose_name_plural = 'Менеджеры клиентов'
+        db_table_comment = 'Manager'
+        db_table = 'manager'
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'phone',
+                'type': 'string',
+                'label': 'телефон',
+            },
+            {
+                'field': 'mail',
+                'type': 'string',
+                'label': 'почта',
+            },
+            {
+                'field': 'customer_group',
+                'type': 'foreign',
+                'label': 'группа',
+                'foreignClass': 'CustomerGroup',
+                'readonly': 'true'
             },
         ]
