@@ -113,6 +113,10 @@ def dictionary_menu_structure():
                     'name': 'Клиенты',
                     'class': 'Customer',
                 },
+                {
+                    'name': 'Менеджеры клиентов',
+                    'class': 'Manager',
+                },
             ]
         },
         {
