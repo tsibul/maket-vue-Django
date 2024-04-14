@@ -65,7 +65,7 @@ class CustomerType(SettingsDictionary):
             SettingsDictionary.dictionary_fields()[0],
             {
                 'field': 'group_discount',
-                'type': 'number',
+                'type': 'string',
                 'label': 'скидка',
                 'null': False,
                 'number': True
