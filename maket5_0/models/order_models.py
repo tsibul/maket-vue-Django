@@ -1,3 +1,6 @@
+import datetime
+
+from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
@@ -13,9 +16,9 @@ class Order(models.Model):
     order_number = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
     supplier = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    inn = models.CharField(max_length=12, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
+    customer_name = models.CharField(max_length=255, blank=True, null=True)
+    customer_inn = models.CharField(max_length=12, blank=True, null=True)
+    customer_address = models.CharField(max_length=255, blank=True, null=True)
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True)
     order_quantity = models.IntegerField(default=0)
     order_sum = models.FloatField(default=0)
@@ -34,6 +37,9 @@ class Order(models.Model):
     number_orders = models.SmallIntegerField(default=0)
     number_makets = models.SmallIntegerField(default=0)
     number_additional = models.SmallIntegerField(default=0)
+    deleted = models.BooleanField(default=False)
+    version = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, models.SET_NULL, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Заказ'
@@ -46,6 +52,18 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.order_number + ' ' + self.customer.name)
+
+    def order_from_parse(self, tr_strings):
+        if len(tr_strings) > 0:
+            self.order_number = str(tr_strings[2][0])
+            self.order_date = datetime.datetime.strptime(tr_strings[1][0], '%d.%m.%Y').date()
+            self.supplier = str(tr_strings[4][0])
+            self.customer_name = str(tr_strings[6][0])
+            self.customer_inn = str(tr_strings[7][0])
+            self.customer_address = str(tr_strings[8][0])
+            self.order_quantity = int(str(tr_strings[10][0]))
+            self.order_sum = float((str(tr_strings[12][0])).replace(',', '.'))
+            self.our_manager = str(tr_strings[13][0])
 
 
 class OrderItem(models.Model):
