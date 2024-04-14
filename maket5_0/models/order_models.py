@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
-from maket5_0.models import Customer, Manager, Good, PrintPlace, PrintPosition
+from maket5_0.models import Customer, Manager, Good, PrintPlace, PrintPosition, TypeGroup, CustomerType, CustomerGroup
 
 fs_orders = FileSystemStorage(location='files/orders')
 
@@ -64,6 +64,29 @@ class Order(models.Model):
             self.order_quantity = int(str(tr_strings[10][0]))
             self.order_sum = float((str(tr_strings[12][0])).replace(',', '.'))
             self.our_manager = str(tr_strings[13][0])
+
+    def update_customer_for_import_order(self):
+        inn = self.customer_inn
+        if inn:
+            customer = Customer.objects.filter(inn=inn).order_by('id').last()
+            if self.customer_name != customer.name:
+                customer.name = self.customer_name
+                customer.save()
+        else:
+            type_group_import = self.order_number[slice(13, 15)]
+            type_group = TypeGroup.objects.filter(type_group=type_group_import).first()
+            customer = Customer.objects.filter(customer_type__type_group=type_group, name=self.customer_name).order_by(
+                'id').last()
+            if not customer:
+                customer_type = CustomerType.objects.get(type_group=type_group)
+                customer = Customer(name=self.customer_name, inn=self.customer_inn, address=self.customer_address,
+                                    customer_type=customer_type)
+                group = CustomerGroup()
+                group.default_group(customer)
+                group.save()
+                customer.customer_group = group
+                customer.save()
+        self.customer = customer
 
 
 class OrderItem(models.Model):
