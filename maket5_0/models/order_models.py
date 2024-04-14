@@ -67,14 +67,17 @@ class Order(models.Model):
 
     def update_customer_for_import_order(self):
         inn = self.customer_inn
-        if inn:
+        if inn and Customer.objects.filter(inn=inn).order_by('id').last():
             customer = Customer.objects.filter(inn=inn).order_by('id').last()
             if self.customer_name != customer.name:
                 customer.name = self.customer_name
                 customer.save()
         else:
-            type_group_import = self.order_number[slice(13, 15)]
-            type_group = TypeGroup.objects.filter(type_group=type_group_import).first()
+            customer_type_import = self.order_number[slice(13, 15)]
+            customer_type = CustomerType.objects.filter(code=customer_type_import).first()
+            type_group = None
+            if customer_type:
+                type_group = customer_type.type_group
             customer = Customer.objects.filter(customer_type__type_group=type_group, name=self.customer_name).order_by(
                 'id').last()
             if not customer:
@@ -106,7 +109,7 @@ class OrderItem(models.Model):
 
     class Meta:
         verbose_name = 'Номенклатура заказа'
-        verbose_name_plural = 'Номенклатура завказов'
+        verbose_name_plural = 'Номенклатура заказов'
         db_table_comment = 'OrderItem'
         db_table = 'order_item'
 

@@ -90,8 +90,8 @@ class CustomerGroup(SettingsDictionary):
     customer_type — type of client (agency, dealer, etc.)
     default — if group consist from one customer"""
     customer_type = models.ForeignKey(CustomerType, models.SET_NULL, null=True, verbose_name='тип клиента')
-    phone = models.CharField(max_length=255, default='', verbose_name='телефон')
-    mail = models.CharField(max_length=255, default='', verbose_name='E-mail')
+    phone = models.CharField(max_length=255, default='', verbose_name='телефон', blank=True, null=True)
+    mail = models.CharField(max_length=255, default='', verbose_name='E-mail', null=True, blank=True)
     default = models.BooleanField(default=True, verbose_name='стандарт')
     fed_region = models.ForeignKey(FedRegion, models.SET_NULL, null=True, blank=True, default=None,
                                    verbose_name='федеральный округ')
@@ -107,9 +107,10 @@ class CustomerGroup(SettingsDictionary):
         self.phone = customer.phone
         self.mail = customer.mail
         self.default = True
-        self.customer_type = customer.type_group
+        self.customer_type = customer.customer_type
         region_to_region = RegionToFedRegion.objects.filter(name=customer.inn[0:2]).first()
-        self.fed_region = region_to_region.fed_region
+        if region_to_region:
+            self.fed_region = region_to_region.fed_region
 
     @staticmethod
     def dictionary_fields():
