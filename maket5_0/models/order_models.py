@@ -98,7 +98,7 @@ class OrderItem(models.Model):
     """
     print_no = models.IntegerField(default=0)
     item = models.ForeignKey(Good, models.SET_NULL, null=True)
-    code = models.CharField(max_length=40, blank=True, null=True)
+    code = models.CharField(max_length=100, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     quantity = models.IntegerField(default=0)
     print_name = models.CharField(max_length=50, blank=True, null=True)
