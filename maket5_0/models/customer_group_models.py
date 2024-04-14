@@ -102,6 +102,15 @@ class CustomerGroup(SettingsDictionary):
         db_table_comment = 'Customer Group'
         db_table = 'customer_group'
 
+    def default_group(self, customer):
+        self.name = customer.name
+        self.phone = customer.phone
+        self.mail = customer.mail
+        self.default = True
+        self.customer_type = customer.type_group
+        region_to_region = RegionToFedRegion.objects.filter(name=customer.inn[0:2]).first()
+        self.fed_region = region_to_region.fed_region
+
     @staticmethod
     def dictionary_fields():
         return [
