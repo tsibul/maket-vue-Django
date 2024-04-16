@@ -154,7 +154,6 @@ class OrderPrint(models.Model):
 class PrintColor(models.Model):
     """Colors of printing"""
     pantone = models.CharField(max_length=40, default='')
-    hex = models.CharField(max_length=7, default='')
     number_in_item = models.SmallIntegerField(default=1)
     print_item = models.ForeignKey(OrderPrint, on_delete=models.CASCADE)
 
