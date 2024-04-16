@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
-from maket5_0.models import Customer, Manager, Good, PrintPlace, PrintPosition, TypeGroup, CustomerType, CustomerGroup
+from maket5_0.models import Customer, Manager, Good, PrintPlace, PrintPosition, TypeGroup, CustomerType, CustomerGroup, \
+    PrintType
 
 fs_orders = FileSystemStorage(location='files/orders')
 
@@ -119,6 +120,14 @@ class OrderItem(models.Model):
     def __str__(self):
         return str(self.code + ' ' + self.print_name)
 
+    def item_from_order_import(self, i, tr_strings):
+        self.print_no = tr_strings[i][0]
+        self.name = tr_strings[i][1]
+        self.code = tr_strings[i][2]
+        self.print_mame = tr_strings[i][3]
+        self.item = Good.objects.filter(article=self.code.split('.')[0], deleted=False)
+        self.quantity = tr_strings[i][4]
+
 
 class OrderPrint(models.Model):
     """
@@ -127,6 +136,7 @@ class OrderPrint(models.Model):
     place = models.CharField(max_length=30, blank=True, null=True)
     print_place = models.ForeignKey(PrintPlace, models.SET_NULL, null=True)
     type = models.CharField(max_length=30, blank=True, null=True)
+    print_type = models.ForeignKey(PrintType, models.SET_NULL, null=True, blank=True, default=None)
     colors = models.SmallIntegerField(default=1)
     second_pass = models.BooleanField(default=False)
     item = models.ForeignKey(OrderItem, on_delete=models.CASCADE, null=True)
