@@ -14,7 +14,7 @@ class Customer(models.Model):
                                        verbose_name='группа клиентов')
     customer_type = models.ForeignKey(CustomerType, models.SET_NULL, null=True, default=None,
                                       verbose_name='тип клиента')
-    frigate_code = models.CharField(max_length=30, default='', db_index=True, unique=True, verbose_name='фрегат id')
+    frigate_code = models.CharField(max_length=30, default='', db_index=True, verbose_name='фрегат id')
     phone = models.CharField(max_length=255, blank=True, verbose_name='телефон')
     mail = models.CharField(max_length=255, null=True, blank=True, verbose_name='E-mail')
     fed_region = models.ForeignKey(FedRegion, models.SET_NULL, null=True, default=None,
