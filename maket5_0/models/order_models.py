@@ -6,6 +6,7 @@ from django.db import models
 
 from maket5_0.models import Customer, Manager, Good, PrintPlace, PrintPosition, TypeGroup, CustomerType, CustomerGroup, \
     PrintType
+from maket5_0.models.our_info_models import OurCompany
 
 fs_orders = FileSystemStorage(location='files/orders')
 
@@ -17,6 +18,7 @@ class Order(models.Model):
     order_number = models.CharField(max_length=18, blank=True, null=True)
     order_date = models.DateField(default='1000-01-01')
     supplier = models.CharField(max_length=50, blank=True, null=True)
+    our_company = models.ForeignKey(OurCompany, models.SET_NULL, blank=True, null=True, default=None)
     customer_name = models.CharField(max_length=255, blank=True, null=True)
     customer_inn = models.CharField(max_length=12, blank=True, null=True)
     customer_address = models.CharField(max_length=255, blank=True, null=True)
@@ -59,6 +61,7 @@ class Order(models.Model):
             self.order_number = str(tr_strings[2][0])
             self.order_date = datetime.datetime.strptime(tr_strings[1][0], '%d.%m.%Y').date()
             self.supplier = str(tr_strings[4][0])
+            self.our_company = OurCompany.objects.filter(name=self.supplier).first()
             self.customer_name = str(tr_strings[6][0])
             self.customer_inn = str(tr_strings[7][0])
             self.customer_address = str(tr_strings[8][0])

@@ -132,5 +132,15 @@ def dictionary_menu_structure():
                     'class': 'RegionToFedRegion',
                 },
             ]
+        },
+        {
+            'name': 'Прочие',
+            'iconUrl': 'gear',
+            'contents': [
+                {
+                    'name': 'Наши компании',
+                    'class': 'OurCompany',
+                },
+            ]
         }
     ]
