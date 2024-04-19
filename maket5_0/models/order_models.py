@@ -124,8 +124,8 @@ class OrderItem(models.Model):
         self.print_no = tr_strings[i][0]
         self.name = tr_strings[i][1]
         self.code = tr_strings[i][2]
-        self.print_mame = tr_strings[i][3]
-        self.item = Good.objects.filter(article=self.code.split('.')[0], deleted=False)
+        self.print_name = tr_strings[i][3]
+        self.item = Good.objects.filter(article=self.code.split('.')[0], deleted=False).first()
         self.quantity = tr_strings[i][4]
 
 
