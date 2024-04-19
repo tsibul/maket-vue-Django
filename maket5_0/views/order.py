@@ -55,7 +55,7 @@ def item_list(request, pk):
             'code': item.code,
             'name': item.name,
             'print_name': item.print_name,
-            'print_price': item.print_price,
+            'item_price': item.item_price,
             'quantity': item.quantity,
             'prints': prints
         }
