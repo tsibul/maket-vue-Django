@@ -26,6 +26,8 @@ urlpatterns = [
 
     path('order/<int:id_no>/<str:order>/<str:search_string>/<int:sh_deleted>',
          views.show_orders, name='orders'),
+    path('item_list/<int:pk>', views.item_list, name='item_list'),
+
     path('import_order', views.import_order, name='import_order'),
     path('delete_order/<int:order_no>', views.delete_order, name='delete_order'),
 
