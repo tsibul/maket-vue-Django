@@ -49,6 +49,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
         db_table_comment = 'Order'
         db_table = 'order'
+        ordering = ['-order_date', '-order_number']
 
     def __repr__(self):
         return self.order_number
@@ -94,6 +95,10 @@ class Order(models.Model):
                 customer.customer_group = group
                 customer.save()
         self.customer = customer
+
+    @staticmethod
+    def order_default():
+        return ['-order_date', '-order_number']
 
 
 class OrderItem(models.Model):
