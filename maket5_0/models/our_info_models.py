@@ -12,6 +12,12 @@ class OurCompany(SettingsDictionary):
         db_table_comment = 'Our Companies'
         db_table = 'our_companies'
 
+    def __str__(self):
+        return self.code
+
+    def __repr__(self):
+        return self.code
+
     @staticmethod
     def dictionary_fields():
         return [
