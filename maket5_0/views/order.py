@@ -31,7 +31,6 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         'to_check',
         'maket_status',
         'order_number',
-        'order_number',
         'our_company__code',
         'customer__name',
         'manager__name',
@@ -77,7 +76,18 @@ def import_order(request):
     imported_order.save()
     order_item_import(tr_strings, imported_order)
     calculate_prices(imported_order)
-    return JsonResponse({})
+    order_out={
+        'pk': imported_order.id,
+        'to_check': imported_order.to_check,
+        'maket_status': imported_order.maket_status,
+        'order_number': imported_order.order_number,
+        'our_company__code': imported_order.our_company.code,
+        'customer__name': imported_order.customer.name,
+        'manager__name': imported_order.manager.name,
+        'manager__mail': imported_order.manager.mail,
+        'order_date': imported_order.order_date
+    }
+    return JsonResponse(order_out, safe=False)
 
 
 @authentication_classes([JWTAuthentication])
