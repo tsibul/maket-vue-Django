@@ -40,19 +40,16 @@ def update_customer_manager(tr_strings, customer):
     customer_manager_name = str(tr_strings[15][0])
     customer_manager_mail = str(tr_strings[16][0])
     customer_manager_phone = str(tr_strings[17][0])
+    cust_manager = None
     if customer_manager_mail != '' and customer_manager_mail != '\xa0':
-        imp_managers = Manager.objects.filter(mail=customer_manager_mail, deleted=False)
-        for imp_manager in imp_managers:
-            if imp_manager.name == customer_manager_name:
-                cust_manager = imp_manager
-                break
-        else:
-            cust_manager = Manager(name=customer_manager_name, phone=customer_manager_phone,
-                                   mail=customer_manager_mail, customer_group=customer.customer_group)
-            cust_manager.save()
-    else:
+        cust_manager = Manager.objects.filter(name=customer_manager_name, mail=customer_manager_mail, deleted=False).first()
+    elif customer_manager_phone != '' and customer_manager_phone != '\xa0':
+        cust_manager = Manager.objects.filter(name=customer_manager_name, phone=customer_manager_phone, deleted=False).first()
+    elif customer_manager_name != '' and customer_manager_name != '\xa0':
+        cust_manager = Manager.objects.filter(name=customer_manager_name, deleted=False).first()
+    if not cust_manager and customer_manager_name != '' and customer_manager_name != '\xa0':
         cust_manager = Manager(name=customer_manager_name, phone=customer_manager_phone,
-                               customer_group=customer.customer_group)
+                               mail=customer_manager_mail, customer_group=customer.customer_group)
         cust_manager.save()
     return cust_manager
 
