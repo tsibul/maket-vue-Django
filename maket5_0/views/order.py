@@ -36,7 +36,8 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         'manager__name',
         'manager__mail',
         'manager__phone',
-        'order_date'
+        'order_date',
+        'deleted'
     )
     return JsonResponse(list(orders_out), safe=False)
 
