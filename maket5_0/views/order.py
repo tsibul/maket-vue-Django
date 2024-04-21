@@ -95,4 +95,7 @@ def import_order(request):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_order(request, order_no):
-    return JsonResponse({})
+    order = Order.objects.get(pk=order_no)
+    order.deleted = True
+    order.save()
+    return JsonResponse({'deletedId': order.id})
