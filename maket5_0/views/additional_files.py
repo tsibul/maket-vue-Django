@@ -29,4 +29,4 @@ def additional_files_list(request, order_pk):
         'additional_file_name',
         'file_type',
     )
-    return JsonResponse({'main': list(main_files), 'deleted': list(deleted_files)}, safe=False)
+    return JsonResponse({'main': list(main_files), 'deleted': list(deleted_files), 'maket': []}, safe=False)
