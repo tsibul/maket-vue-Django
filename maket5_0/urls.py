@@ -36,4 +36,5 @@ urlpatterns = [
     path('additional_file/<int:order_pk>', views.additional_files_list, name='additional_files'),
     path('import_additional_file/<int:order_pk>', views.import_additional_file, name='import_additional_file'),
     path('additional_file_show/<int:file_pk>/<str:file_name>', views.additional_file_show, name='additional_file_show'),
+    path('delete_additional_file/<int:file_no>', views.delete_additional_file, name='delete_additional_file'),
 ]

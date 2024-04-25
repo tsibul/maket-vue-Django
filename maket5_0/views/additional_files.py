@@ -72,3 +72,12 @@ def additional_file_show(request, file_pk, file_name):
             return FileResponse(open(file.additional_file.path, 'rb'), content_type='application/force-download')
         except:
             return None
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_additional_file(request, file_no):
+    file = AdditionalFile.objects.get(pk=file_no)
+    file.deleted = True
+    file.save()
+    return JsonResponse({'deletedId': file.id})
