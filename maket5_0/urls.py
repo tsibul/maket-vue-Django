@@ -34,4 +34,5 @@ urlpatterns = [
     path('import_file', views.import_file, name='import_order'),
 
     path('additional_file/<int:order_pk>', views.additional_files_list, name='additional_files'),
+    path('import_additional_file/<int:order_pk>', views.import_additional_file, name='import_additional_file'),
 ]
