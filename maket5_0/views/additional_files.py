@@ -30,6 +30,7 @@ def additional_files_list(request, order_pk):
         'name',
         'additional_file_name',
         'file_type',
+        'order__id'
     )
     return JsonResponse({'main': list(main_files), 'deleted': list(deleted_files), 'maket': []}, safe=False)
 
@@ -53,7 +54,7 @@ def import_additional_file(request, order_pk):
         'id': new_file.id,
         'name': new_file.name,
         'additional_file_name': new_file.additional_file.name,
-        'file_type': new_file.file_type
+        'file_type': new_file.file_type,
     }
     return JsonResponse(result, safe=False)
 
