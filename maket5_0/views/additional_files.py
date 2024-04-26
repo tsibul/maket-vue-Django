@@ -10,6 +10,13 @@ from maket5_0.models import Order, AdditionalFile
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def additional_files_list(request, order_pk):
+    """
+    Create list of additional files and Layouts connected to the specified order
+    :param request: additional_file/<int:order_pk>
+    :param order_pk: order id
+    :return: Dictionary of arrays where key is type of additional file and value is list of additional files as
+    dictionary of it's fields
+    """
     order = Order.objects.get(id=order_pk)
     order_number = order.order_number
     main_files = AdditionalFile.objects.filter(
@@ -39,6 +46,12 @@ def additional_files_list(request, order_pk):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def import_additional_file(request, order_pk):
+    """
+    Import additional file  and connect it to order
+    :param request: import_additional_file/<int:order_pk>
+    :param order_pk: order id to which file be connected
+    :return: additional file fields
+    """
     order = Order.objects.get(id=order_pk)
     additional_file = request.data['file']
     additional_file_type = request.data['file_type']
@@ -55,6 +68,7 @@ def import_additional_file(request, order_pk):
         'name': new_file.name,
         'additional_file_name': new_file.additional_file.name,
         'file_type': new_file.file_type,
+        'order__id': new_file.order.id
     }
     return JsonResponse(result, safe=False)
 
@@ -62,6 +76,13 @@ def import_additional_file(request, order_pk):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def additional_file_show(request, file_pk, file_name):
+    """
+    Show an additional file if it pdf, and download it in other cases
+    :param request: additional_file_show/<int:file_pk>/<str:file_name>
+    :param file_pk: additional file id
+    :param file_name: additional file name
+    :return: file with file name
+    """
     file = AdditionalFile.objects.get(id=file_pk)
     if file.file_type == '.pdf':
         try:
@@ -78,7 +99,30 @@ def additional_file_show(request, file_pk, file_name):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_additional_file(request, file_no):
+    """
+    Delete additional file from order
+    :param request: delete_additional_file/<int:file_no>
+    :param file_no: file id
+    :return: deleted file id
+    """
     file = AdditionalFile.objects.get(pk=file_no)
     file.deleted = True
     file.save()
-    return JsonResponse({'deletedId': file.id})
+    return JsonResponse({'deletedId': file.id}, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def reconnect_additional_file(request, file_no, order_pk):
+    """
+    Reconnect additional file to new order
+    :param request: reconnect_additional_file/<int:file_no>/<int:order_pk>
+    :param file_no: file id
+    :param order_pk: new order id
+    :return: file id, new order id
+    """
+    file = AdditionalFile.objects.get(pk=file_no)
+    order = Order.objects.get(pk=order_pk)
+    file.order = order
+    file.save()
+    return JsonResponse({'fileId': file.id, 'orderId': file.order.id}, safe=False)
