@@ -79,6 +79,11 @@ def dictionary_menu_structure():
             'iconUrl': 'paint-roller',
             'contents': [
                 {
+                    'name': 'Шаблоны нанесения',
+                    'class': 'Pattern',
+
+                },
+                {
                     'name': 'Место печати (деталь)',
                     'class': 'PrintPlace',
 
