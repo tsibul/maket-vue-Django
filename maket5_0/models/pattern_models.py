@@ -15,7 +15,7 @@ class Pattern(SettingsDictionary):
         verbose_name_plural = "шаблоны нанесения"
         ordering = ['good__article']
         db_table_comment = 'Pattern'
-        db_table = 'patern'
+        db_table = 'pattern'
 
     def __str__(self):
         return self.name
