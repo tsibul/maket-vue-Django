@@ -39,6 +39,6 @@ urlpatterns = [
     path('reconnect_additional_file/<int:file_no>/<int:order_pk>', views.reconnect_additional_file,
          name='reconnect_additional_file'),
 
-    path('pattern_show/<int:file_pk>', views.pattern_show, name='pattern_show'),
+    path('pattern_show/<int:file_pk>/<str:file_name>', views.pattern_show, name='pattern_show'),
 
 ]

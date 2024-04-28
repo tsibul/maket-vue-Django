@@ -10,7 +10,7 @@ from maket5_0.models import Pattern
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def pattern_show(request, file_pk):
+def pattern_show(request, file_pk, file_name):
     """
     Show pattern if it pdf, and download it in other cases
     :param request: pattern_show/<int:file_pk>
