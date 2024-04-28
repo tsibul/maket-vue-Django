@@ -70,7 +70,6 @@ def dictionary_menu_structure():
                 {
                     'name': 'Тип Материала',
                     'class': 'MaterialType',
-
                 },
             ]
         },
@@ -79,14 +78,8 @@ def dictionary_menu_structure():
             'iconUrl': 'paint-roller',
             'contents': [
                 {
-                    'name': 'Шаблоны нанесения',
-                    'class': 'Pattern',
-
-                },
-                {
                     'name': 'Место печати (деталь)',
                     'class': 'PrintPlace',
-
                 },
                 {
                     'name': 'Ориентация печати',
@@ -95,7 +88,11 @@ def dictionary_menu_structure():
                 {
                     'name': 'Тип печати',
                     'class': 'PrintType',
-                }
+                },
+                {
+                    'name': 'Шаблоны нанесения',
+                    'class': 'Pattern',
+                },
             ]
         },
         {

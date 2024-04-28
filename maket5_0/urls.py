@@ -38,4 +38,7 @@ urlpatterns = [
     path('delete_additional_file/<int:file_no>', views.delete_additional_file, name='delete_additional_file'),
     path('reconnect_additional_file/<int:file_no>/<int:order_pk>', views.reconnect_additional_file,
          name='reconnect_additional_file'),
+
+    path('pattern_show/<int:file_pk>', views.pattern_show, name='pattern_show'),
+
 ]
