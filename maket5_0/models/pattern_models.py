@@ -17,10 +17,6 @@ class Pattern(SettingsDictionary):
         db_table_comment = 'Pattern'
         db_table = 'patern'
 
-    def save(self, *args, **kwargs):
-        self.name = self.file.name
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return self.name
 
