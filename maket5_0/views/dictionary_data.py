@@ -133,6 +133,8 @@ def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
             if field['type'] == 'boolean':
                 result = 'да' if getattr(item, field['field']) else 'нет'
                 current_dict['fields'].append(result)
+            elif field['type'] == 'file':
+                current_dict['fields'].append(getattr(item, field['field']).name)
             elif field['type'] != 'foreign':
                 current_dict['fields'].append(getattr(item, field['field']))
             else:
@@ -184,6 +186,8 @@ def dictionary_single_record(request, dict_type, record_id):
             if field_object:
                 record_data.update({field['field'] + '_id': field_object.id})
                 record_data.update({field['field']: str(field_object)})
+        elif field['type'] == 'file':
+            record_data.update({field['field']: getattr(record, field['field']).name})
         else:
             record_data.update({field['field']: getattr(record, field['field'])})
 
