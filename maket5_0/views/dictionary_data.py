@@ -122,7 +122,7 @@ def dict_additional_filter(dict_type, order, id_no, search_string, sh_deleted):
             elif field['type'] == 'foreign':
                 foreign_model = getattr(models, field['foreignClass'])
                 for key in foreign_model.dictionary_fields():
-                    if key['type'] == 'text':
+                    if key['type'] == 'string':
                         field_name = field['field'] + '__' + key['field'] + '__icontains'
                         dict_items = dict_items | filter_items.filter(**{field_name: search_string})
     dict_items = dict_items.distinct()[id_no: id_no + 20]
