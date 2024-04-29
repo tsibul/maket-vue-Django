@@ -6,3 +6,4 @@ from maket5_0.views.import_order import *
 from maket5_0.views.order import *
 from maket5_0.views.additional_files import *
 from maket5_0.views.pattern import *
+from maket5_0.views.files import *
