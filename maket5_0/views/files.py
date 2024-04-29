@@ -1,5 +1,6 @@
 import os
 
+from django.db.models import Q
 from django.http import JsonResponse
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +14,7 @@ from maket5_0.models import AdditionalFile, Pattern
 def files_additional_file(request, search_string, id_no, sh_undeleted):
     files = AdditionalFile.objects.all()
     if sh_undeleted == 0:
-        files = files.filter(deleted=True)
+        files = files.filter(Q(deleted=True) | Q(order__deleted=True)).distinct()
     if search_string != 'default':
         files = files.filter(
             name__icontains=search_string,
@@ -59,7 +60,7 @@ def files_pattern(request, search_string, id_no, sh_undeleted):
     result = files.values(
         'id',
         'name',
-        'file__name'
+        'file',
         'good__article',
         'good__name'
     )
