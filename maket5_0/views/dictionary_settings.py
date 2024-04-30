@@ -143,6 +143,10 @@ def dictionary_menu_structure():
                     'name': 'Наши компании',
                     'class': 'OurCompany',
                 },
+                {
+                    'name': 'Pantone2Hex',
+                    'class': 'PantoneToHex',
+                },
             ]
         }
     ]
