@@ -14,7 +14,7 @@ class Maket(models.Model):
     maket_number = models.SmallIntegerField(default=1)
     uploaded = models.BooleanField(default=False)
     file = models.FileField(storage=fs_maket, null=True, blank=True)
-    comment = models.CharField(max_length=255, default='')
+    comment = models.CharField(max_length=255, default='', blank=True, null=True)
     order = models.ForeignKey(Order, models.SET_NULL, null=True)
     order_number = models.CharField(max_length=40, blank=True, null=True)
     order_date = models.DateField(default='2024-01-01')
