@@ -10,7 +10,8 @@ from maket5_0.models.detail_models import *
 from maket5_0.models.customer_group_models import *
 from maket5_0.models.customer_models import *
 from maket5_0.models.order_models import *
-
+from maket5_0.models.maket_models import *
+from maket5_0.models.film_models import *
 from maket5_0.models.file_models import *
 
 
