@@ -1,7 +1,3 @@
-import datetime
-import json
-import os
-
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
@@ -102,4 +98,4 @@ def delete_order(request, order_no):
     order = Order.objects.get(pk=order_no)
     order.deleted = True
     order.save()
-    return JsonResponse({'deletedId': order.id})
+    return JsonResponse({'id': order.id})

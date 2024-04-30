@@ -108,7 +108,7 @@ def delete_additional_file(request, file_no):
     file = AdditionalFile.objects.get(pk=file_no)
     file.deleted = True
     file.save()
-    return JsonResponse({'deletedId': file.id}, safe=False)
+    return JsonResponse({'id': file.id}, safe=False)
 
 
 @authentication_classes([JWTAuthentication])
