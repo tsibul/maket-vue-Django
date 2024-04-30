@@ -45,10 +45,14 @@ urlpatterns = [
          views.files_additional_file, name='files_additional_file'),
     path('files_additional_file_delete/<int:file_id>',
          views.files_additional_file_delete, name='files_additional_file_delete'),
+    path('files_additional_file_delete_all',
+         views.files_additional_file_delete_all, name='files_additional_file_delete_all'),
 
     path('files_pattern/<int:id_no>/<str:search_string>/<int:sh_undeleted>',
          views.files_pattern, name='files_pattern'),
     path('files_pattern_delete/<int:file_id>',
          views.files_pattern_delete, name='files_pattern_delete'),
+    path('files_pattern_delete_all',
+         views.files_pattern_delete_all, name='files_pattern_delete_all'),
 
 ]

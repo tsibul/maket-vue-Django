@@ -46,6 +46,14 @@ def files_additional_file_delete(request, file_id):
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
+def files_additional_file_delete_all(request):
+    files = AdditionalFile.objects.filter(Q(deleted=True) | Q(order__deleted=True)).distinct()
+    answer = delete_all(files)
+    return JsonResponse(answer, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def files_pattern(request, search_string, id_no, sh_undeleted):
     files = Pattern.objects.all()
     if sh_undeleted == 0:
@@ -78,6 +86,14 @@ def files_pattern_delete(request, file_id):
     return JsonResponse(answer, safe=False)
 
 
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def files_pattern_delete_all(request):
+    files = Pattern.objects.filter(deleted=True)
+    answer = delete_all(files)
+    return JsonResponse(answer, safe=False)
+
+
 def delete_file_from_disk(file, file_obj):
     file_path = file.path
     try:
@@ -86,3 +102,12 @@ def delete_file_from_disk(file, file_obj):
         return True
     except:
         return False
+
+
+def delete_all(files):
+    answer = {'deleted': True}
+    for file_obj in files:
+        file = file_obj.file
+        if not delete_file_from_disk(file, file_obj):
+            answer = {'deleted': True}
+    return answer
