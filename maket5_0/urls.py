@@ -56,5 +56,6 @@ urlpatterns = [
          views.files_pattern_delete_all, name='files_pattern_delete_all'),
 
     path('maket_to_order/<int:order_no>', views.maket_to_order, name='maket_to_order'),
+    path('maket_info/<int:maket_id>/<int:order_id>', views.maket_info, name='maket_info'),
 
 ]
