@@ -54,11 +54,27 @@ def maket_info(request, maket_id, order_id):
         'cst_manager': order.manager.name,
         'cst_manager_info': order.manager.phone + ' ' + order.manager.mail,
     }
-    order_items = OrderItem.objects.filter(order__id=order_id)
+    order_items = OrderItem.objects.filter(order__id=order_id).order_by('item__article')
+    table_contents = []
+    i = 0
+    for order_item in order_items:
+        i = i + 1
+        table_contents.append({
+            'id': order_item.id,
+            'no': i,
+            'article': order_item.code,
+            'name': order_item.name,
+            'print_name': order_item.print_name,
+            'quantity': order_item.quantity,
+            'print_item': []
+        })
     order_prints = list(OrderPrint.objects.filter(item__in=order_items).values())
-    result = {'headerInfo': header_info,
-              'footerInfo': footer_info,
-              'maket': maket_values,
-              'order_prints': list(order_prints),
-              'order_items': list(order_items.values())}
+    result = {
+        'headerInfo': header_info,
+        'footerInfo': footer_info,
+        'tableContent': table_contents,
+        'maket': maket_values,
+        'order_prints': list(order_prints),
+        'order_items': list(order_items.values())
+    }
     return JsonResponse(result, safe=False)
