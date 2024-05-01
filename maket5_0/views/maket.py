@@ -39,11 +39,26 @@ def maket_info(request, maket_id, order_id):
     maket_values = ''
     if maket:
         maket_values = maket.values()
-    order = Order.objects.filter(id=order_id)
+    order = Order.objects.get(id=order_id)
+    header_info = {
+        'number': order.order_number,
+        'date': order.order_date.strftime('%d.%m.%y'),
+        'supplier': order.supplier,
+        'customer': order.customer.name,
+    }
+    footer_info = {
+        'supplier': order.supplier,
+        'customer': order.customer.name,
+        'our_manager': order.our_manager,
+        'our_manager_info': 'info@proecopen.ru, office@vikivostok.ru, +7(495)6404825',
+        'cst_manager': order.manager.name,
+        'cst_manager_info': order.manager.phone + ' ' + order.manager.mail,
+    }
     order_items = OrderItem.objects.filter(order__id=order_id)
     order_prints = list(OrderPrint.objects.filter(item__in=order_items).values())
-    result = {'maket': maket_values,
-              'order': list(order.values()),
+    result = {'headerInfo': header_info,
+              'footerInfo': footer_info,
+              'maket': maket_values,
               'order_prints': list(order_prints),
               'order_items': list(order_items.values())}
     return JsonResponse(result, safe=False)
