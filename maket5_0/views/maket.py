@@ -3,7 +3,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Maket, Order, OrderItem, OrderPrint
+from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor
 
 
 @authentication_classes([JWTAuthentication])
@@ -46,35 +46,57 @@ def maket_info(request, maket_id, order_id):
         'supplier': order.supplier,
         'customer': order.customer.name,
     }
+    manager = ''
+    manager_info = ''
+    if order.manager:
+        manager = order.manager.name
+        manager_info = order.manager.phone + ' ' + order.manager.mail
     footer_info = {
         'supplier': order.supplier,
         'customer': order.customer.name,
         'our_manager': order.our_manager,
         'our_manager_info': 'info@proecopen.ru, office@vikivostok.ru, +7(495)6404825',
-        'cst_manager': order.manager.name,
-        'cst_manager_info': order.manager.phone + ' ' + order.manager.mail,
+        'cst_manager': manager,
+        'cst_manager_info': manager_info,
     }
     order_items = OrderItem.objects.filter(order__id=order_id).order_by('item__article')
     table_contents = []
     i = 0
     for order_item in order_items:
         i = i + 1
+        order_prints = OrderPrint.objects.filter(item=order_item)
+        print_items = []
+        for print in order_prints:
+            print_colors = '/'.join(PrintColor.objects.filter(print_item=print).values_list('pantone', flat=True))
+            print_position = ''
+            if print.print_position:
+                print_position = print.print_position.name
+            print_items.append({
+                'id': print.id,
+                'place': print.place,
+                'type': print.type,
+                'color_quantity': print.colors,
+                'second_pass': print.second_pass,
+                'position': print_position,
+                'color': print_colors
+            })
+        good_id = 0
+        if order_item.item:
+            good_id = order_item.item.id
         table_contents.append({
             'id': order_item.id,
             'no': i,
+            'good_id': good_id,
             'article': order_item.code,
             'name': order_item.name,
             'print_name': order_item.print_name,
             'quantity': order_item.quantity,
-            'print_item': []
+            'print_item': print_items,
         })
-    order_prints = list(OrderPrint.objects.filter(item__in=order_items).values())
     result = {
         'headerInfo': header_info,
         'footerInfo': footer_info,
         'tableContent': table_contents,
         'maket': maket_values,
-        'order_prints': list(order_prints),
-        'order_items': list(order_items.values())
     }
     return JsonResponse(result, safe=False)
