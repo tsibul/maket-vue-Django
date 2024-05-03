@@ -115,12 +115,17 @@ class OrderItem(models.Model):
     item_price = models.FloatField(default=0)
     print_price = models.FloatField(default=0)
     num_prints = models.IntegerField(default=0)
+    item_group = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Номенклатура заказа'
         verbose_name_plural = 'Номенклатура заказов'
         db_table_comment = 'OrderItem'
         db_table = 'order_item'
+
+    def save(self, *args, **kwargs):
+        self.item_group = self.code.split('.')[0] + '()' + self.print_name
+        super(OrderItem, self).save(*args, **kwargs)
 
     def __repr__(self):
         return self.code + ' ' + self.print_name
