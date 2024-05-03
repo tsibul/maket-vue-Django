@@ -61,6 +61,7 @@ def maket_info(request, maket_id, order_id):
     }
     order_items = OrderItem.objects.filter(order__id=order_id).order_by('item__article')
     table_contents = []
+    item_groups = {}
     i = 0
     for order_item in order_items:
         i = i + 1
@@ -83,20 +84,31 @@ def maket_info(request, maket_id, order_id):
         good_id = 0
         if order_item.item:
             good_id = order_item.item.id
-        table_contents.append({
+        print_name = order_item.print_name
+        good_article = order_item.code.split('.')[0]
+        table_item = {
             'id': order_item.id,
             'no': i,
             'good_id': good_id,
             'article': order_item.code,
+            'good_article': good_article,
             'name': order_item.name,
-            'print_name': order_item.print_name,
+            'print_name': print_name,
             'quantity': order_item.quantity,
             'print_item': print_items,
-        })
+        }
+        item_key = good_article + '()' + print_name
+        if item_key not in item_groups:
+            item_groups[item_key] = []
+        item_groups[item_key].append(table_item)
+        table_item['itemGroup'] = item_key
+        table_item['inMaket'] = True
+        table_contents.append(table_item)
     result = {
         'headerInfo': header_info,
         'footerInfo': footer_info,
         'tableContent': table_contents,
         'maket': maket_values,
+        'itemGroups': item_groups,
     }
     return JsonResponse(result, safe=False)
