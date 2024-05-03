@@ -97,7 +97,12 @@ def maket_info(request, maket_id, order_id):
             'quantity': order_item.quantity,
             'print_item': print_items,
         }
-        item_key = good_article + '()' + print_name
+        if order_item.item_group:
+            item_key = order_item.item_group
+        else:
+            item_key = good_article + '()' + print_name
+            order_item.item_group = item_key
+            order_item.save()
         if item_key not in item_groups:
             item_groups[item_key] = []
         item_groups[item_key].append(table_item)
