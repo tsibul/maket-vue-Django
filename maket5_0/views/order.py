@@ -22,6 +22,8 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         orders = order_search_filter(orders, search_string)
     if order != 'default':
         orders = orders.order_by(order)
+    else:
+        orders = orders.order_by(*Order.order_default())
     orders = orders[id_no: id_no + 20]
     orders_out = orders.values(
         'pk',
