@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -119,6 +119,25 @@ def maket_info(request, maket_id, order_id):
         'itemGroups': item_groups_sorted,
     }
     return JsonResponse(result, safe=False)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def maket_grouping_change(request):
+    """
+    Change maket grouping
+    :param request: maket_grouping_change
+    :return:
+    """
+    for group, item_array in request.data.items():
+        if len(item_array):
+            filtered_item_array = list(filter(lambda el: el['itemGroup'] != group, item_array))
+            for item in filtered_item_array:
+                order_item = OrderItem.objects.get(id=item['id'])
+                order_item.item_group = group
+                order_item.save()
+    return JsonResponse({'id': True}, safe=False)
 
 
 def sort_by_article(arr):
