@@ -109,11 +109,17 @@ def maket_info(request, maket_id, order_id):
         table_item['itemGroup'] = item_key
         table_item['inMaket'] = True
         table_contents.append(table_item)
+
+    item_groups_sorted = {k: sort_by_article(v) for k, v in item_groups.items()}
     result = {
         'headerInfo': header_info,
         'footerInfo': footer_info,
         'tableContent': table_contents,
         'maket': maket_values,
-        'itemGroups': item_groups,
+        'itemGroups': item_groups_sorted,
     }
     return JsonResponse(result, safe=False)
+
+
+def sort_by_article(arr):
+    return sorted(arr, key=lambda x: x['article'])
