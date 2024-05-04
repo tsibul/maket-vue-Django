@@ -124,7 +124,8 @@ class OrderItem(models.Model):
         db_table = 'order_item'
 
     def save(self, *args, **kwargs):
-        self.item_group = self.code.split('.')[0] + '()' + self.print_name
+        if not self.item_group:
+            self.item_group = self.code.split('.')[0] + '()' + self.print_name
         super(OrderItem, self).save(*args, **kwargs)
 
     def __repr__(self):
