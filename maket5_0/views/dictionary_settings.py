@@ -140,6 +140,10 @@ def dictionary_menu_structure():
             'iconUrl': 'gear',
             'contents': [
                 {
+                    'name': 'Шаблон блока макета',
+                    'class': 'MaketPattern',
+                },
+                {
                     'name': 'Наши компании',
                     'class': 'OurCompany',
                 },
