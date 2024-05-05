@@ -36,19 +36,11 @@ def dictionary_menu_structure():
                     'class': 'Good',
                     'emitChoices': True
                 },
-                # {
-                #     'name': 'Детали',
-                #     'class': 'DetailItem',
-                # },
                 {
                     'name': 'Наборы изображений',
-                    'class': 'DetailImagesSet',
+                    'class': 'GoodsImagesSet',
                     'emitChoices': True
                 },
-                # {
-                #     'name': 'Типы деталей',
-                #     'class': 'DetailType',
-                # },
                 {
                     'name': 'Изображения',
                     'class': 'DetailImage',
