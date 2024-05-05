@@ -1,51 +1,9 @@
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
-from maket5_0.models import SettingsDictionary, Good, MaterialType, PrintPosition
+from maket5_0.models import SettingsDictionary, PrintPosition, GoodsImagesSet
 
 fs_detail_images = FileSystemStorage(location='files/detail_images')
-
-
-class GoodsImagesSet(SettingsDictionary):
-    """Set of Images of each detail
-    images_quantity — size of images set"""
-    good = models.ForeignKey(Good, on_delete=models.CASCADE, null=True, blank=True)
-    images_quantity = models.IntegerField(verbose_name='количество изображений элемента')
-
-    class Meta(SettingsDictionary.Meta):
-        verbose_name = 'Набор изображений изделия'
-        verbose_name_plural = 'Наборы изображений изделий'
-        db_table_comment = 'Set of Goods Images'
-        db_table = 'goods_images_set'
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        self.name = str(self.good.name)
-        super(GoodsImagesSet, self).save(*args, **kwargs)
-
-    @staticmethod
-    def dictionary_fields():
-        return [
-            {
-                'field': 'good',
-                'type': 'foreign',
-                'label': 'продукция',
-                'foreignClass': 'Good'
-            },
-            {
-                'field': 'images_quantity',
-                'type': 'string',
-                'label': 'кол-во видов',
-                'number': True,
-                'null': False,
-                'emitChoices': True
-            },
-        ]
 
 
 class DetailImage(SettingsDictionary):
