@@ -17,10 +17,16 @@ class MaketPattern(SettingsDictionary):
         db_table = 'maket_pattern'
 
     def __str__(self):
-        return self.name + ' ' + self.comment
+        add_str = ''
+        if self.comment:
+            add_str = ' ' + self.comment
+        return self.name + add_str
 
     def __repr__(self):
-        return self.name + ' ' + self.comment
+        add_str = ''
+        if self.comment:
+            add_str = ' ' + self.comment
+        return self.name + add_str
 
     @staticmethod
     def dictionary_fields():
