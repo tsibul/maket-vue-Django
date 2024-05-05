@@ -92,7 +92,7 @@ class Good(SettingsDictionary):
             },
             {
                 'field': 'detail_quantity',
-                'type': 'number',
+                'type': 'string',
                 'label': 'кол-во деталей',
                 'null': False,
                 'number': True,
