@@ -4,6 +4,10 @@ from maket5_0.models import SettingsDictionary
 
 
 class MaketPattern(SettingsDictionary):
+    """
+    Pattern for maket layout
+    comment: comment
+    """
     comment = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta(SettingsDictionary.Meta):

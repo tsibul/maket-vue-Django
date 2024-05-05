@@ -1,6 +1,6 @@
 from django.db import models
 
-from maket5_0.models import ColorScheme
+from maket5_0.models import ColorScheme, MaketPattern
 from maket5_0.models.settings_dictionary import SettingsDictionary
 
 
@@ -8,10 +8,13 @@ class Good(SettingsDictionary):
     """details of item detail# if exist
         name - name of goods
         article - item code
-        color_scheme - main color scheme"""
+        color_scheme - main color scheme
+        maket_pattern - layout in maket_layout
+        """
 
     article = models.CharField(max_length=30, null=True, blank=True, verbose_name='артикул')
     color_scheme = models.ForeignKey(ColorScheme, models.SET_NULL, null=True, verbose_name='цветовая схема')
+    maket_pattern = models.ForeignKey(MaketPattern, models.SET_NULL, null=True, verbose_name='размещение в макете')
     detail_quantity = models.SmallIntegerField(default=1, verbose_name='количество деталей')
 
     class Meta(SettingsDictionary.Meta):
@@ -47,6 +50,12 @@ class Good(SettingsDictionary):
                 'label': 'цветовая схема',
                 'foreignClass': 'ColorScheme',
                 'null': False
+            },
+            {
+                'field': 'maket_pattern',
+                'type': 'foreign',
+                'label': 'вид блока в макете',
+                'foreignClass': 'MaketPattern',
             },
             {
                 'field': 'detail_quantity',
