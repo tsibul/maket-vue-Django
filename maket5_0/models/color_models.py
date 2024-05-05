@@ -1,6 +1,6 @@
 from django.db import models
 
-from maket5_0.models import SettingsDictionary, MaterialType
+from maket5_0.models import SettingsDictionary, MaterialType, PantoneToHex
 
 
 class ColorScheme(SettingsDictionary):
@@ -46,6 +46,13 @@ class Color(SettingsDictionary):
     color_scheme = models.ForeignKey(ColorScheme, models.SET_NULL, null=True, verbose_name='цветовая схема')
     standard = models.BooleanField(default=True, verbose_name='стандарт')
 
+    def save(self, *args, **kwargs):
+        if not self.hex:
+            hex = PantoneToHex.objects.filter(name=self.pantone).first()
+            if hex:
+                self.hex = hex.hex
+        super(Color, self).save(*args, **kwargs)
+
     def __repr__(self):
         return str(self.code + ' ' + self.name + ', ' + self.color_scheme.name)
 
@@ -76,7 +83,6 @@ class Color(SettingsDictionary):
                 'field': 'hex',
                 'type': 'string',
                 'label': 'HEX',
-                'null': False
             },
             {
                 'field': 'color_scheme',
