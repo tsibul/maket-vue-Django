@@ -3,7 +3,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor
+from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType
 
 
 @authentication_classes([JWTAuthentication])
@@ -72,6 +72,13 @@ def maket_info(request, maket_id, order_id):
             print_position = ''
             if print.print_position:
                 print_position = print.print_position.name
+            printable = True
+            if not print.print_type:
+                print_type = PrintType.objects.filter(name=print.type).first()
+                if print_type:
+                    print.print_type = print_type
+                    printable = print_type.printable
+                    print_type.save()
             print_items.append({
                 'id': print.id,
                 'place': print.place,
@@ -79,7 +86,8 @@ def maket_info(request, maket_id, order_id):
                 'color_quantity': print.colors,
                 'second_pass': print.second_pass,
                 'position': print_position,
-                'color': print_colors
+                'color': print_colors,
+                'printable': printable
             })
         good_id = 0
         if order_item.item:
