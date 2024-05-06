@@ -78,7 +78,7 @@ def maket_info(request, maket_id, order_id):
                 if print_type:
                     print.print_type = print_type
                     printable = print_type.printable
-                    print_type.save()
+                    print.save()
             print_items.append({
                 'id': print.id,
                 'place': print.place,
