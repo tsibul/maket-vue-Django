@@ -1,8 +1,23 @@
+from django.db import models
 from maket5_0.models import SettingsDictionary
 
 
 class PrintType(SettingsDictionary):
-    """ Pad, screen, UW, soft_touch etc."""
+    """ Pad, screen, UW, soft_touch etc.
+    printable: if show in maket
+    """
+    printable = models.BooleanField(default=True)
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            SettingsDictionary.dictionary_fields()[0],
+            {
+                'field': 'printable',
+                'type': 'boolean',
+                'label': 'печатается',
+            },
+        ]
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'тип печати'
