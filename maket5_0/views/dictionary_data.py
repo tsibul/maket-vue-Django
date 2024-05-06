@@ -6,7 +6,7 @@ from maket5_0 import models
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from django.views.decorators.csrf import csrf_exempt
 from maket5_0.service_functions import linking_filter
 
 
@@ -56,11 +56,11 @@ def dictionary_filter(request, dict_type, filter_dictionary, filter_dictionary_i
     return JsonResponse(formatted_dict_items, safe=False)
 
 
-@api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
+@csrf_exempt
 def dictionary_update(request, dict_type):
-    dict_id = request.data['id']
+    dict_id = request.POST['id']
     dict_model = getattr(models, dict_type)
     field_list = dict_model.dictionary_fields()
     if dict_id != '0':
@@ -68,16 +68,16 @@ def dictionary_update(request, dict_type):
     else:
         dict_element = dict_model()
     for field in field_list:
-        request_data = request.data[field['field']]
+        # request_data = request.POST[field['field']]
         if field['type'] == 'string' or field['type'] == 'choices':
-            setattr(dict_element, field['field'], request_data)
+            setattr(dict_element, field['field'], request.POST[field['field']])
         elif field['type'] == 'boolean':
-            setattr(dict_element, field['field'], request_data)
+            setattr(dict_element, field['field'], request.POST[field['field']])
         elif field['type'] == 'file':
-            setattr(dict_element, field['field'], request_data)
+            setattr(dict_element, field['field'], request.FILES[field['field']])
         elif field['type'] == 'foreign':
             foreign_model = getattr(models, field['foreignClass'])
-            foreign_element = foreign_model.objects.get(id=request_data)
+            foreign_element = foreign_model.objects.get(id=request.POST[field['field']])
             setattr(dict_element, field['field'], foreign_element)
     dict_element.save()
     return JsonResponse({'id': dict_element.id})
