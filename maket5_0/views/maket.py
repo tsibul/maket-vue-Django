@@ -3,7 +3,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType
+from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType, Good
 from maket5_0.service_functions import check_printable
 
 
@@ -119,13 +119,23 @@ def maket_info(request, maket_id, order_id):
         show_groups = {}
         for key in item_groups_sorted.keys():
             show_groups[key] = True
+    group_patterns = {}
+    for key in item_groups_sorted.keys():
+        goods_article = key.split('()')[0]
+        try:
+            pattern_name = Good.objects.get(article=goods_article).maket_pattern.name
+        except:
+            pattern_name = None
+        group_patterns[key] = pattern_name
+
     result = {
         'headerInfo': header_info,
         'footerInfo': footer_info,
         'tableContent': table_contents,
         'maket': maket_values,
         'itemGroups': item_groups_sorted,
-        'showGroups': show_groups
+        'showGroups': show_groups,
+        'groupPatterns': group_patterns,
     }
     return JsonResponse(result, safe=False)
 
