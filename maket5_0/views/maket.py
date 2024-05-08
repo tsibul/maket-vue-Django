@@ -3,7 +3,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType, Good, DetailImage
+from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType, Good, DetailImage, Color
 from maket5_0.service_functions import check_printable
 
 
@@ -137,9 +137,9 @@ def maket_info(request, maket_id, order_id):
         if Good.objects.filter(article=goods_article).first():
             image_set = DetailImage.objects.filter(goods_image_set__good__article=goods_article)
             group_images[key] = []
-            for deiail_image in image_set:
-                with open(deiail_image.svg_file.path, 'r') as f:
-                    group_images[key].append(f.read())
+            for detail_image in image_set:
+                with open(detail_image.svg_file.path, 'r') as f:
+                    group_images[key].append([detail_image.image_number, f.read()])
 
     result = {
         'headerInfo': header_info,
@@ -173,5 +173,20 @@ def maket_grouping_change(request):
     return JsonResponse({'id': True}, safe=False)
 
 
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def item_color_code_list(request, article):
+    color_array = article.split('.')
+    good_article = color_array.pop[0]
+    color_scheme = Good.objects.filter(article=good_article).first().color_scheme
+    hex_array = []
+    for color in color_array:
+        hex_array.append(Color.objects.filter(color_scheme=color_scheme, code=color).first().hex)
+    return JsonResponse({'id': hex_array}, safe=False)
+
+
+
+
 def sort_by_article(arr):
     return sorted(arr, key=lambda x: x['article'])
+

@@ -58,5 +58,6 @@ urlpatterns = [
     path('maket_to_order/<int:order_no>', views.maket_to_order, name='maket_to_order'),
     path('maket_info/<int:maket_id>/<int:order_id>', views.maket_info, name='maket_info'),
     path('maket_grouping_change', views.maket_grouping_change, name='maket_grouping_change'),
+    path('item_color_code_list', views.item_color_code_list, name='item_color_code_list'),
 
 ]
