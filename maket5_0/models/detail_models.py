@@ -3,7 +3,7 @@ from django.db import models
 
 from maket5_0.models import SettingsDictionary, PrintPosition, GoodsImagesSet
 
-fs_detail_images = FileSystemStorage(location='files/detail_images')
+fs_detail_images = FileSystemStorage(location='maket5_0/files/detail_images')
 
 
 class DetailImage(SettingsDictionary):
@@ -46,7 +46,7 @@ class DetailImage(SettingsDictionary):
                 'field': 'image_number',
                 'type': 'choices',
                 'label': 'порядковый номер',
-                'choices': 'detailI_mages_set',
+                'choices': 'goods_image_set',
                 'choicesField': 'images_quantity'
             },
             {
@@ -57,7 +57,7 @@ class DetailImage(SettingsDictionary):
             },
             {
                 'field': 'svg_file',
-                'type': 'svgFile',
+                'type': 'file',
                 'label': 'файл изображения',
             },
         ]
