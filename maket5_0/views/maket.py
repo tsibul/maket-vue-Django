@@ -3,7 +3,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType, Good
+from maket5_0.models import Maket, Order, OrderItem, OrderPrint, PrintColor, PrintType, Good, DetailImage
 from maket5_0.service_functions import check_printable
 
 
@@ -85,10 +85,16 @@ def maket_info(request, maket_id, order_id):
                 'printable': printable
             })
         good_id = 0
+        good_article = order_item.code.split('.')[0]
         if order_item.item:
             good_id = order_item.item.id
+        else:
+            goods_obj = Good.objects.filter(article=good_article).first()
+            if goods_obj:
+                order_item.item = goods_obj
+                order_item.save()
+                good_id = goods_obj.id
         print_name = order_item.print_name
-        good_article = order_item.code.split('.')[0]
         table_item = {
             'id': order_item.id,
             'no': i,
@@ -120,6 +126,7 @@ def maket_info(request, maket_id, order_id):
         for key in item_groups_sorted.keys():
             show_groups[key] = True
     group_patterns = {}
+    group_images = {}
     for key in item_groups_sorted.keys():
         goods_article = key.split('()')[0]
         try:
@@ -127,6 +134,12 @@ def maket_info(request, maket_id, order_id):
         except:
             pattern_name = None
         group_patterns[key] = pattern_name
+        if Good.objects.filter(article=goods_article).first():
+            image_set = DetailImage.objects.filter(goods_image_set__good__article=goods_article)
+            group_images[key] = []
+            for deiail_image in image_set:
+                with open(deiail_image.svg_file.path, 'r') as f:
+                    group_images[key].append(f.read())
 
     result = {
         'headerInfo': header_info,
@@ -136,6 +149,7 @@ def maket_info(request, maket_id, order_id):
         'itemGroups': item_groups_sorted,
         'showGroups': show_groups,
         'groupPatterns': group_patterns,
+        'groupImages': group_images
     }
     return JsonResponse(result, safe=False)
 
