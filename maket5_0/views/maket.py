@@ -176,6 +176,12 @@ def maket_grouping_change(request):
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def item_color_code_list(request, article):
+    """
+    item_color_code_list returns list of hex colors from article
+    :param request: item_color_code_list/<str:article>
+    :param article: 
+    :return: list of hex colors
+    """
     color_array = article.split('.')
     good_article = color_array.pop[0]
     color_scheme = Good.objects.filter(article=good_article).first().color_scheme
@@ -185,8 +191,5 @@ def item_color_code_list(request, article):
     return JsonResponse({'id': hex_array}, safe=False)
 
 
-
-
 def sort_by_article(arr):
     return sorted(arr, key=lambda x: x['article'])
-
