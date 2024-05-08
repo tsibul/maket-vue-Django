@@ -179,11 +179,11 @@ def item_color_code_list(request, article):
     """
     item_color_code_list returns list of hex colors from article
     :param request: item_color_code_list/<str:article>
-    :param article: 
+    :param article:
     :return: list of hex colors
     """
     color_array = article.split('.')
-    good_article = color_array.pop[0]
+    good_article = color_array.pop(0)
     color_scheme = Good.objects.filter(article=good_article).first().color_scheme
     hex_array = []
     for color in color_array:
