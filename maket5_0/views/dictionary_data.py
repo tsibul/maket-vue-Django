@@ -74,7 +74,7 @@ def dictionary_update(request, dict_type):
         elif field['type'] == 'boolean':
             setattr(dict_element, field['field'], request.POST[field['field']])
         elif field['type'] == 'file':
-            setattr(dict_element, field['field'], request.FILES[field['field']])
+            setattr(dict_element, field['field'], request.FILES['file'])
         elif field['type'] == 'foreign':
             foreign_model = getattr(models, field['foreignClass'])
             foreign_element = foreign_model.objects.get(id=request.POST[field['field']])
