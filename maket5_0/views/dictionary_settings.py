@@ -82,8 +82,8 @@ def dictionary_menu_structure():
                     'class': 'PrintType',
                 },
                 {
-                    'name': 'Шаблоны нанесения',
-                    'class': 'Pattern',
+                    'name': 'Соответствие места и позиции печати',
+                    'class': 'PrintPlaceToPrintPosition',
                 },
             ]
         },
@@ -142,6 +142,10 @@ def dictionary_menu_structure():
                 {
                     'name': 'Pantone2Hex',
                     'class': 'PantoneToHex',
+                },
+                {
+                    'name': 'Шаблоны нанесения',
+                    'class': 'Pattern',
                 },
             ]
         }

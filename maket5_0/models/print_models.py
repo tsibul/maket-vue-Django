@@ -44,3 +44,46 @@ class PrintPosition(SettingsDictionary):
         verbose_name_plural = 'ориентации печати'
         db_table_comment = 'Print Position'
         db_table = 'print_position'
+
+
+class PrintPlaceToPrintPosition(SettingsDictionary):
+    """PrintPlace to PrintPosition Correspondence"""
+    print_place = models.ForeignKey(PrintPlace, on_delete=models.CASCADE)
+    print_position = models.ForeignKey(PrintPosition, on_delete=models.CASCADE)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'соответствие места и ориентации нанесения'
+        verbose_name_plural = 'соответствие места и ориентации нанесения'
+        ordering = ['print_place__name']
+        db_table_comment = 'Print Place to Print Position'
+        db_table = 'print_place_to_print_position'
+
+    def __repr__(self):
+        return self.print_place.name + ' ' + self.print_position.name
+
+    def __str__(self):
+        return self.print_place.name + ' ' + self.print_position.name
+
+    @staticmethod
+    def order_default():
+        return ['print_place__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'print_place',
+                'type': 'foreign',
+                'label': 'место нанесения',
+                'foreignClass': 'PrintPlace',
+                'null': False
+            },
+            {
+                'field': 'print_position',
+                'type': 'foreign',
+                'label': 'позиция нанесения',
+                'foreignClass': 'PrintPosition',
+                'null': False
+            },
+        ]
+
