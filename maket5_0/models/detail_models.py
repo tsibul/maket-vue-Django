@@ -13,6 +13,7 @@ class DetailImage(SettingsDictionary):
     image_number = models.IntegerField(choices=[], verbose_name='порядковый номер')
     print_position = models.ForeignKey(PrintPosition, models.SET_NULL, verbose_name='место нанесения', null=True)
     svg_file = models.FileField(storage=fs_detail_images, null=True, blank=True, verbose_name='файл изображения')
+    image_width = models.FloatField(default=138.205, null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'SVG код элемента'
@@ -59,5 +60,11 @@ class DetailImage(SettingsDictionary):
                 'field': 'svg_file',
                 'type': 'file',
                 'label': 'файл изображения',
+            },
+            {
+                'field': 'image_width',
+                'type': 'string',
+                'label': 'длина изображения',
+                'number': True,
             },
         ]
