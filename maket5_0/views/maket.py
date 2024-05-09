@@ -71,8 +71,10 @@ def maket_info(request, maket_id, order_id):
         for print_item in order_prints:
             print_colors = '/'.join(PrintColor.objects.filter(print_item=print_item).values_list('pantone', flat=True))
             print_position = ''
+            print_position_id = ''
             if print_item.print_position:
                 print_position = print_item.print_position.name
+                print_position_id = print_item.print_position.id
             printable = check_printable(print_item)
             print_items.append({
                 'id': print_item.id,
@@ -81,6 +83,7 @@ def maket_info(request, maket_id, order_id):
                 'color_quantity': print_item.colors,
                 'second_pass': print_item.second_pass,
                 'position': print_position,
+                'position_id': print_position_id,
                 'color': print_colors,
                 'printable': printable
             })
@@ -139,7 +142,8 @@ def maket_info(request, maket_id, order_id):
             group_images[key] = []
             for detail_image in image_set:
                 with open(detail_image.svg_file.path, 'r') as f:
-                    group_images[key].append([detail_image.image_number, f.read()])
+                    group_images[key].append([detail_image.image_number, f.read(), detail_image.print_position.id,
+                                              detail_image.print_position.name, detail_image.image_width])
 
     result = {
         'headerInfo': header_info,
