@@ -46,7 +46,7 @@ class DetailImage(SettingsDictionary):
             {
                 'field': 'image_number',
                 'type': 'choices',
-                'label': 'порядковый номер',
+                'label': '# п/п',
                 'choices': 'goods_image_set',
                 'choicesField': 'images_quantity'
             },
@@ -64,7 +64,7 @@ class DetailImage(SettingsDictionary):
             {
                 'field': 'image_width',
                 'type': 'string',
-                'label': 'длина изображения',
+                'label': 'длина детали',
                 'number': True,
             },
         ]
