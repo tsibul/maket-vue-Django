@@ -164,8 +164,13 @@ def maket_group_patterns_images(item_groups_sorted):
             group_images[key] = []
             for detail_image in image_set:
                 with open(detail_image.svg_file.path, 'r') as f:
-                    group_images[key].append([detail_image.image_number, f.read(), detail_image.print_position.id,
-                                              detail_image.print_position.name, detail_image.image_width])
+                    group_images[key].append([
+                        detail_image.image_number,
+                        f.read(),
+                        detail_image.print_position.id,
+                        detail_image.print_position.name,
+                        detail_image.image_width
+                    ])
     return group_patterns, group_images
 
 
