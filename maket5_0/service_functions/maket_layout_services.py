@@ -42,7 +42,6 @@ def maket_order_items(order_items):
     :param order_items:
     :return: table_contents, item_groups
     """
-    table_contents = []
     item_groups = {}
     i = 0
     for order_item in order_items:
@@ -72,8 +71,7 @@ def maket_order_items(order_items):
         item_groups[item_key].append(table_item)
         table_item['itemGroup'] = item_key
         table_item['inMaket'] = True
-        table_contents.append(table_item)
-    return table_contents, item_groups
+    return item_groups
 
 
 def maket_print_items(order_item):

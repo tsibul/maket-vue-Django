@@ -47,14 +47,13 @@ def maket_info(request, maket_id, order_id):
     header_info = maket_header_info(order)
     footer_info = maket_footer_info(order)
     order_items = OrderItem.objects.filter(order__id=order_id).order_by('code')
-    table_contents, item_groups = maket_order_items(order_items)
+    item_groups = maket_order_items(order_items)
     item_groups_sorted = {k: sort_by_article(v) for k, v in item_groups.items()}
     show_groups = maket_show_groups_data(maket_id, item_groups_sorted)
     group_patterns, group_images = maket_group_patterns_images(item_groups_sorted)
     result = {
         'headerInfo': header_info,
         'footerInfo': footer_info,
-        'tableContent': table_contents,
         'maket': maket_values,
         'itemGroups': item_groups_sorted,
         'showGroups': show_groups,
