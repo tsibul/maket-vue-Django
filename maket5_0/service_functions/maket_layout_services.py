@@ -85,11 +85,11 @@ def maket_print_items(order_item):
     )
     print_items = []
     for print_item in order_prints:
-        print_colors = '/'.join(PrintColor.objects.filter(
+        print_colors = list(PrintColor.objects.filter(
             print_item=print_item
-        ).values_list(
+        ).values(
+            'id',
             'pantone',
-            flat=True
         ))
         image_id, image_list = maket_image_manage(print_item, order_item)
         print_position, print_position_id = maket_print_positions_data(print_item)
@@ -236,5 +236,3 @@ def sort_by_article(arr):
     :return: item_groups sorted by item article
     """
     return sorted(arr, key=lambda x: x['article'])
-
-
