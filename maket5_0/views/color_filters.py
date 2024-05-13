@@ -15,7 +15,10 @@ def hex_from_pantone(request, pantone):
     :param pantone:
     :return: hex_color
     """
-    hex_color = PantoneToHex.objects.filter(name=pantone).first().hex
+    hex_color = '#FFFFFF'
+    hex_obj = PantoneToHex.objects.filter(name=pantone).first()
+    if hex_obj:
+        hex_color = hex_obj.hex
     return JsonResponse({'hex': hex_color}, safe=False)
 
 
