@@ -59,7 +59,7 @@ def maket_info(request, maket_id, order_id):
         'showGroups': show_groups,
         'groupPatterns': group_patterns,
         'groupImages': group_images,
-        'techInfo': None
+        # 'techInfo': None
     }
     return JsonResponse(result, safe=False)
 
