@@ -99,9 +99,13 @@ def item_color_code_list(request, article):
     color_scheme = good_object.color_scheme
     hex_array = []
     length_difference = article_length - len(color_array)
+    j = 0
     for color in color_array:
         color_last = Color.objects.filter(color_scheme=color_scheme, code=color).first().hex
         hex_array.append(color_last)
+        j = j + 1
+        if j == -length_difference:
+            break
     if length_difference:
         for i in range(length_difference):
             hex_array.append(color_last)
