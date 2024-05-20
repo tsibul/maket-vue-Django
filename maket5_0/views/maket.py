@@ -99,3 +99,11 @@ def item_color_code_list(request, article):
     for color in color_array:
         hex_array.append(Color.objects.filter(color_scheme=color_scheme, code=color).first().hex)
     return JsonResponse({'id': hex_array}, safe=False)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def maket_save(request):
+    return JsonResponse({'id': 'success'}, safe=False)
+

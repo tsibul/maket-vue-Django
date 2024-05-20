@@ -59,6 +59,7 @@ urlpatterns = [
     path('maket_info/<int:maket_id>/<int:order_id>', views.maket_info, name='maket_info'),
     path('maket_grouping_change', views.maket_grouping_change, name='maket_grouping_change'),
     path('item_color_code_list/<str:article>', views.item_color_code_list, name='item_color_code_list'),
+    path('maket_save', views.maket_save, name='maket_save'),
 
     path('hex_from_pantone/<str:pantone>', views.hex_from_pantone, name='hex_from_pantone'),
 
