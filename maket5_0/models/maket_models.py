@@ -16,22 +16,25 @@ class Maket(models.Model):
     file = models.FileField(storage=fs_maket, null=True, blank=True)
     comment = models.CharField(max_length=255, default='', blank=True, null=True)
     order = models.ForeignKey(Order, models.SET_NULL, null=True)
-    order_number = models.CharField(max_length=40, blank=True, null=True)
-    order_date = models.DateField(default='2024-01-01')
     deleted = models.BooleanField(default=False)
+    format_selected = models.CharField(max_length=2, default='1')
+    table_show = models.BooleanField(default=True)
+    picture_show = models.BooleanField(default=False)
+    frame_show = models.BooleanField(default=True)
+    before_footer = models.SmallIntegerField(default=0)
 
     class Meta:
         verbose_name = "макет"
         verbose_name_plural = "макеты"
-        ordering = ['-order_number', 'maket_number']
+        ordering = ['-order__order_number', 'maket_number']
         db_table_comment = 'Maket'
         db_table = 'maket'
 
     def __repr__(self):
-        return self.order_number
+        return self.order.order_number
 
     def __str__(self):
-        return str(self.order_number + ' ' + self.order.customer.name)
+        return str(self.order.order_number + ' ' + self.order.customer.name)
 
     @staticmethod
     def order_default():
@@ -42,8 +45,7 @@ class MaketItem(models.Model):
     """If item from order exists in Maket"""
     item = models.ForeignKey(OrderItem, on_delete=models.CASCADE, null=True, blank=True)
     maket = models.ForeignKey(Maket, on_delete=models.CASCADE, null=True, blank=True)
-    checked = models.BooleanField(default=True)
-    print_name = models.CharField(max_length=50,  null=True, blank=True)
+    in_maket = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "состав макета"
@@ -52,10 +54,10 @@ class MaketItem(models.Model):
         db_table = 'maket_item'
 
     def __repr__(self):
-        return str(self.maket.order_number + ' ' + self.item.item.article)
+        return str(self.maket.order.order_number + ' ' + self.item.item.article)
 
     def __str__(self):
-        return str(self.maket.order_number + ' ' + self.item.item.article)
+        return str(self.maket.order.order_number + ' ' + self.item.item.article)
 
 
 class MaketPrint(models.Model):
@@ -78,3 +80,18 @@ class MaketPrint(models.Model):
 
     def __repr__(self):
         return self.print_item.item.item.name + ' ' + self.print_item.item.print_name
+
+
+class MaketGroup(models.Model):
+    maket = models.ForeignKey(Maket, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    show = models.BooleanField(default=True)
+    select_all = models.BooleanField(default=False)
+    show_miniature = models.BooleanField(default=True)
+    spaces_before = models.SmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "группировка в макете"
+        verbose_name_plural = "группировки в макетах"
+        db_table_comment = 'MaketGroup'
+        db_table = 'maket_group'
