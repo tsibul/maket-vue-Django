@@ -65,9 +65,6 @@ class MaketPrint(models.Model):
     print_item = models.ForeignKey(OrderPrint, models.SET_NULL, null=True, blank=True)
     maket = models.ForeignKey(Maket, on_delete=models.CASCADE, null=True, blank=True)
     checked = models.BooleanField(default=True)
-    print_type = models.ForeignKey(PrintType, models.SET_NULL, null=True, blank=True)
-    print_place = models.ForeignKey(PrintPlace, models.SET_NULL, null=True, blank=True)
-    print_position = models.ForeignKey(PrintPosition, models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = "печать в макете"
