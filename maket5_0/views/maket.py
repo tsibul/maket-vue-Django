@@ -94,10 +94,17 @@ def item_color_code_list(request, article):
     """
     color_array = article.split('.')
     good_article = color_array.pop(0)
-    color_scheme = Good.objects.filter(article=good_article).first().color_scheme
+    good_object = Good.objects.filter(article=good_article).first()
+    article_length = good_object.detail_quantity
+    color_scheme = good_object.color_scheme
     hex_array = []
+    length_difference = article_length - len(color_array)
     for color in color_array:
-        hex_array.append(Color.objects.filter(color_scheme=color_scheme, code=color).first().hex)
+        color_last = Color.objects.filter(color_scheme=color_scheme, code=color).first().hex
+        hex_array.append(color_last)
+    if length_difference:
+        for i in range(length_difference):
+            hex_array.append(color_last)
     return JsonResponse({'id': hex_array}, safe=False)
 
 
