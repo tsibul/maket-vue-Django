@@ -139,12 +139,12 @@ def maket_save(request):
     maket.save()
 
     group_data = request.data['group_layout']
-    show_groups = request.data['show_groups']
-    for group in show_groups.keys():
+    # show_groups = request.data['show_groups']
+    for group in group_data.keys():
         maket_group = MaketGroup.objects.filter(name=group, maket=maket).first()
         if not maket_group:
             maket_group = MaketGroup(name=group, maket=maket)
-        maket_group.show = show_groups[group]
+        maket_group.show = group_data[group]['show']
         maket_group.show_miniature = group_data[group]['showMiniature']
         maket_group.spaces_before = group_data[group]['spacesBefore']
         maket_group.select_all = group_data[group]['selectAll']
