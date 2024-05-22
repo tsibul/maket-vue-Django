@@ -1,6 +1,7 @@
 from django.db.models import Func, F, Value, CharField
 
-from maket5_0.models import OrderPrint, PrintColor, Good, DetailImage, PrintPlaceToPrintPosition, Maket
+from maket5_0.models import OrderPrint, PrintColor, Good, DetailImage, PrintPlaceToPrintPosition, Maket, MaketGroup, \
+    OrderItem
 from maket5_0.service_functions import check_printable
 
 
@@ -293,3 +294,27 @@ def maket_tech_info(maket_id, order_id):
         }
         before_footer = 0
     return tech_info, before_footer
+
+
+def group_layout_data(maket_id, order_id):
+    groups = MaketGroup.objects.filter(maket__id=maket_id)
+    group_layout = {}
+    if groups.count() > 0:
+        for group in groups:
+            group_layout[group.name] = {
+                'show': group.show,
+                'selectAll': group.select_all,
+                'spacesBefore': group.spaces_before,
+                'showMiniature': group.show_miniature,
+            }
+
+    else:
+        groups = OrderItem.objects.filter(order__id=order_id).values_list('item_group', flat=True).distinct()
+        for group in groups:
+            group_layout[group] = {
+                'show': True,
+                'selectAll': False,
+                'spacesBefore': 0,
+                'showMiniature': True
+            }
+    return group_layout
