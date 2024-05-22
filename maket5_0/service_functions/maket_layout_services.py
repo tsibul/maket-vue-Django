@@ -1,4 +1,6 @@
-from maket5_0.models import OrderPrint, PrintColor, Good, DetailImage, PrintPlaceToPrintPosition
+from django.db.models import Func, F, Value, CharField
+
+from maket5_0.models import OrderPrint, PrintColor, Good, DetailImage, PrintPlaceToPrintPosition, Maket
 from maket5_0.service_functions import check_printable
 
 
@@ -236,3 +238,58 @@ def sort_by_article(arr):
     :return: item_groups sorted by item article
     """
     return sorted(arr, key=lambda x: x['article'])
+
+
+def maket_tech_info(maket_id, order_id):
+    """
+    Prepare Maket technical info for layout
+    :param order_id:
+    :param maket_id:
+    :return: tech_info, before_footer
+    """
+    maket_list = list(
+        Maket.objects.filter(
+            order__id=order_id
+        ).annotate(
+            date=Func(
+                F('date_create'),
+                Value('MM.DD.YYYY'),
+                function='TO_CHAR',
+                output_field=CharField()
+            )
+        ).values(
+            'id',
+            'comment',
+            'maket_number',
+            'date'
+        )
+    )
+    maket = Maket.objects.filter(id=maket_id).first()
+    if maket:
+        tech_info = {
+            'formatSelected': maket.format_selected,
+            'tableShow': maket.table_show,
+            'pictureShow': maket.picture_show,
+            'frameShow': maket.frame_show,
+            'maketId': maket.id,
+            'maketDate': maket.date_create.strftime('%d.%m.%Y'),
+            'maketNumber': maket.maket_number,
+            'maketComment': maket.comment,
+            'maketData': maket_list,
+            # 'beforeFooter': maket.before_footer
+        }
+        before_footer = maket.before_footer
+    else:
+        tech_info = {
+            'formatSelected': 1,
+            'tableShow': True,
+            'pictureShow': False,
+            'frameShow': True,
+            'maketId': 0,
+            'maketNumber': None,
+            'maketComment': '',
+            'maketData': maket_list,
+            # 'beforeFooter': 5
+        }
+        before_footer = 0
+    return tech_info, before_footer
