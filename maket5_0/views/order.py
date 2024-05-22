@@ -1,4 +1,4 @@
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Min
 from django.http import JsonResponse
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -36,10 +36,10 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         'manager__mail',
         'manager__phone',
         'order_date',
-        'deleted'
+        'deleted',
     ).annotate(
-        # maket=Count('maket'),
-        files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False))
+        files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
+        maketId=Min('maket__id')
     )
     return JsonResponse(list(orders_out), safe=False)
 
