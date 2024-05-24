@@ -8,13 +8,14 @@ from maket5_0.models import Maket, Order
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-def maket_list_info(request, id_no):
-    maket_list = Order.objects.filter(
-        deleted=False,
+def maket_list_info(request, search_string, sh_deleted, id_no):
+    order_list = Order.objects.filter(
         maket__isnull=False
-    ).order_by(
-        '-order-date',
-        '-order_number'
-    )[id_no: id_no + 20]
+    )
+    if not sh_deleted:
+        order_list = Order.objects.filter(deleted=False)
+    if search_string != 'default':
+        pass
+    order_list = order_list.order_by('-order_date', '-order_number')[id_no: id_no + 20]
 
-    return JsonResponse(maket_list, safe=False)
+    return JsonResponse({'orderList': order_list}, safe=False)

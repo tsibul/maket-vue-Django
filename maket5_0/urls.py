@@ -61,7 +61,7 @@ urlpatterns = [
     path('item_color_code_list/<str:article>', views.item_color_code_list, name='item_color_code_list'),
     path('maket_save', views.maket_save, name='maket_save'),
 
-    path('maket_list/<int:id_no>', views.maket_list_info, name='maket_list'),
+    path('maket_list/<str:search_string>/<int:show_deleted>/<int:id_no>', views.maket_list_info, name='maket_list'),
 
     path('hex_from_pantone/<str:pantone>', views.hex_from_pantone, name='hex_from_pantone'),
 
