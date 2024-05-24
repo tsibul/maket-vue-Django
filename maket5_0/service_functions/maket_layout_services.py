@@ -1,7 +1,7 @@
 from django.db.models import Func, F, Value, CharField
 
 from maket5_0.models import OrderPrint, PrintColor, Good, DetailImage, PrintPlaceToPrintPosition, Maket, MaketGroup, \
-    OrderItem
+    OrderItem, MaketPrint
 from maket5_0.service_functions import check_printable
 
 
@@ -39,7 +39,7 @@ def maket_footer_info(order):
     }
 
 
-def maket_order_items(order_items):
+def maket_order_items(order_items, maket_id):
     """
     Prepare data for maket order items
     :param order_items:
@@ -49,7 +49,7 @@ def maket_order_items(order_items):
     i = 0
     for order_item in order_items:
         i = i + 1
-        print_items = maket_print_items(order_item)
+        print_items = maket_print_items(order_item, maket_id)
         good_id, good_article = maket_item_goods_data(order_item)
         print_name = order_item.print_name
         table_item = {
@@ -77,7 +77,7 @@ def maket_order_items(order_items):
     return item_groups
 
 
-def maket_print_items(order_item):
+def maket_print_items(order_item, maket_id):
     """
     Prepare print items data for maket print
     :param order_item:
@@ -97,6 +97,11 @@ def maket_print_items(order_item):
         image_id, image_list = maket_image_manage(print_item, order_item)
         print_position, print_position_id = maket_print_positions_data(print_item)
         printable = check_printable(print_item)
+        maket_print = MaketPrint.objects.filter(maket__id=maket_id, print_item=print_item).first()
+        if maket_print:
+            checked = maket_print.checked
+        else:
+            checked = False
         print_items.append({
             'id': print_item.id,
             'place': print_item.place,
@@ -109,6 +114,7 @@ def maket_print_items(order_item):
             'printable': printable,
             'image_id': image_id,
             'image_list': image_list,
+            'checked': checked,
         })
     return print_items
 
