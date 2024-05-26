@@ -1,6 +1,7 @@
 import os
 
 from django.core.files import File
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -31,6 +32,9 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
         'maket__date_create',
         'maket__comment',
         'maket__file',
+    ).annotate(
+        maketQuantity=Count('maket__order', filter=Q(maket__deleted=False)),
+        files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
     )
     result = []
     order_prev = 0
@@ -43,6 +47,8 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                 'orderNumber': order['order_number'],
                 'orderDate': order['order_date'].strftime('%d.%m.%y'),
                 'customerName': order['customer__name'],
+                'maketQuantity': order['maketQuantity'],
+                'files': order['files'],
                 'maketList': [
                     {
                         'id': order['maket__id'],
