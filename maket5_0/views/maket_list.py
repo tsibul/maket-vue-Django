@@ -33,8 +33,6 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
         'maket__comment',
         'maket__file',
     ).annotate(
-        maketQuantity=Count('maket__order',
-                            filter=Q(maket__deleted=False) & Q(maket__file__isnull=False) & ~Q(maket__file='')),
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
     )
     result = []
@@ -48,7 +46,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                 'orderNumber': order['order_number'],
                 'orderDate': order['order_date'].strftime('%d.%m.%y'),
                 'customerName': order['customer__name'],
-                'maketQuantity': order['maketQuantity'],
+                # 'maketQuantity': order['maketQuantity'],
                 'files': order['files'],
                 'maketList': [
                     {
@@ -83,6 +81,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                     ).values_list('name', flat=True))
                 }
             )
+        new_order['maketQuantity'] = len(list(filter(lambda x: x['file'], new_order['maketList'])))
     return JsonResponse(result, safe=False)
 
 
