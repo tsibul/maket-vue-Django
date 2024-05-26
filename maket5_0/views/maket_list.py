@@ -17,7 +17,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
         maket__isnull=False
     )
     if not sh_deleted:
-        order_list = order_list.filter(deleted=False)
+        order_list = order_list.filter(deleted=False, maket__deleted=False)
     if search_string != 'default':
         pass
     order_list = order_list.order_by('-order_date', '-order_number')[id_no: id_no + 20]
@@ -32,6 +32,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
         'maket__date_create',
         'maket__comment',
         'maket__file',
+        'maket__deleted'
     ).annotate(
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
     )
@@ -46,7 +47,6 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                 'orderNumber': order['order_number'],
                 'orderDate': order['order_date'].strftime('%d.%m.%y'),
                 'customerName': order['customer__name'],
-                # 'maketQuantity': order['maketQuantity'],
                 'files': order['files'],
                 'maketList': [
                     {
@@ -55,6 +55,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                         'dateCreate': order['maket__date_create'].strftime('%d.%m.%y'),
                         'comment': order['maket__comment'],
                         'file': order['maket__file'],
+                        'maketDeleted': order['maket__deleted'],
                         'groups': list(MaketGroup.objects.filter(
                             maket__id=order['maket__id'],
                             show=True
@@ -73,6 +74,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                     'dateCreate': order['maket__date_create'].strftime('%d.%m.%y'),
                     'comment': order['maket__comment'],
                     'file': order['maket__file'],
+                    'maketDeleted': order['maket__deleted'],
                     'groups': list(MaketGroup.objects.filter(
                         maket__id=order['maket__id'],
                         show=True
@@ -117,7 +119,7 @@ def maket_file_save(request, maket_id):
 def maket_delete(request, maket_id):
     """
     Delete maket file from maket table
-    :param request:
+    :param request: maket_delete/<int:maket_id>
     :param maket_id:
     :return:
     """

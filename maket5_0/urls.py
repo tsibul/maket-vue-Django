@@ -63,7 +63,7 @@ urlpatterns = [
     path('maket_save', views.maket_save, name='maket_save'),
 
     path('maket_list/<str:search_string>/<int:sh_deleted>/<int:id_no>', views.maket_list_info, name='maket_list'),
-    path('maket_delete/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
+    path('maket_delete/<int:maket_id>', views.maket_delete, name='maket_delete'),
     path('maket_file_save/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
     path('maket_show/<int:maket_id>', views.maket_show, name='maket_show'),
 
