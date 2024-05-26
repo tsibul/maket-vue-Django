@@ -10,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 fs_tmp = FileSystemStorage(location='maket5_0/files')
 
 
-@csrf_exempt
+@api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def import_file(request):
