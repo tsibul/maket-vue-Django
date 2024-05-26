@@ -1,6 +1,7 @@
 import os
 
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import permission_classes, authentication_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 fs_tmp = FileSystemStorage(location='maket5_0/files')
 
 
-@api_view(['POST'])
+@csrf_exempt
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def import_file(request):
