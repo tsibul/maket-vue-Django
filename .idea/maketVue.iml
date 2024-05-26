@@ -15,6 +15,11 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/maket5_0/files/additional" />
+      <excludeFolder url="file://$MODULE_DIR$/maket5_0/files/detail_images" />
+      <excludeFolder url="file://$MODULE_DIR$/maket5_0/files/maket" />
+      <excludeFolder url="file://$MODULE_DIR$/maket5_0/files/patterns" />
+      <excludeFolder url="file://$MODULE_DIR$/maket5_0/svg" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
