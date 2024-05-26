@@ -38,6 +38,7 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         'order_date',
         'deleted',
     ).annotate(
+        maketQuantity=Count('maket__order', filter=Q(maket__deleted=False)),
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
         maketId=Min('maket__id')
     )
