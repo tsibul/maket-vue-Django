@@ -59,11 +59,13 @@ urlpatterns = [
     path('maket_info/<int:maket_id>/<int:order_id>', views.maket_info, name='maket_info'),
     path('maket_grouping_change', views.maket_grouping_change, name='maket_grouping_change'),
     path('item_color_code_list/<str:article>', views.item_color_code_list, name='item_color_code_list'),
+
     path('maket_save', views.maket_save, name='maket_save'),
-    path('maket_delete/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
-    path('maket_file_save/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
 
     path('maket_list/<str:search_string>/<int:sh_deleted>/<int:id_no>', views.maket_list_info, name='maket_list'),
+    path('maket_delete/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
+    path('maket_file_save/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
+    path('maket_show/<int:maket_id>', views.maket_show, name='maket_show'),
 
     path('hex_from_pantone/<str:pantone>', views.hex_from_pantone, name='hex_from_pantone'),
 

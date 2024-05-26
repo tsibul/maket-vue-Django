@@ -2,7 +2,7 @@ import os
 
 from django.core.files import File
 from django.db.models import Count, Q
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -125,3 +125,13 @@ def maket_delete(request, maket_id):
     maket.deleted = True
     maket.save()
     return JsonResponse(maket_id, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def maket_show(request, maket_id):
+    maket = Maket.objects.get(id=maket_id)
+    try:
+        return FileResponse(open(maket.file.path, 'rb'), content_type='application/pdf')
+    except:
+        return None
