@@ -33,7 +33,8 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
         'maket__comment',
         'maket__file',
     ).annotate(
-        maketQuantity=Count('maket__order', filter=Q(maket__deleted=False)),
+        maketQuantity=Count('maket__order',
+                            filter=Q(maket__deleted=False) & Q(maket__file__isnull=False) & ~Q(maket__file='')),
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
     )
     result = []

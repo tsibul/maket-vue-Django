@@ -38,7 +38,8 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         'order_date',
         'deleted',
     ).annotate(
-        maketQuantity=Count('maket__order', filter=Q(maket__deleted=False)),
+        maketQuantity=Count('maket__order',
+                            filter=Q(maket__deleted=False) & Q(maket__file__isnull=False) & ~Q(maket__file='')),
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
         maketId=Min('maket__id')
     )
@@ -81,7 +82,7 @@ def import_order(request):
     imported_order.save()
     order_item_import(tr_strings, imported_order)
     calculate_prices(imported_order)
-    order_out={
+    order_out = {
         'pk': imported_order.id,
         'to_check': imported_order.to_check,
         'maket_status': imported_order.maket_status,
