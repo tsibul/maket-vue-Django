@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from maket5_0.models import Maket, Order, MaketGroup
+from maket5_0.views import order_search_filter
 
 
 @authentication_classes([JWTAuthentication])
@@ -19,7 +20,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
     if not sh_deleted:
         order_list = order_list.filter(deleted=False, maket__deleted=False)
     if search_string != 'default':
-        pass
+        order_list = order_search_filter(order_list, search_string)
     order_list = order_list.order_by('-order_date', '-order_number')[id_no: id_no + 20]
     order_list = order_list.values(
         'id',
