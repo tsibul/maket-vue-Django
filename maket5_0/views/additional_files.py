@@ -1,10 +1,13 @@
-from django.db.models import Q
+import os
+
+from django.db.models import Q, F
+from django.db.models.functions import Substr, Length
 from django.http import JsonResponse, FileResponse, HttpResponse
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Order, AdditionalFile
+from maket5_0.models import Order, AdditionalFile, Maket
 
 
 @authentication_classes([JWTAuthentication])
@@ -39,7 +42,41 @@ def additional_files_list(request, order_pk):
         'file_type',
         'order__id'
     )
-    return JsonResponse({'main': list(main_files), 'deleted': list(deleted_files), 'maket': []}, safe=False)
+    maket_files = Maket.objects.filter(
+        Q(order=order) &
+        Q(deleted=False) &
+        ~Q(file='')
+    ).annotate(
+        name=F('order__order_number'),
+        additional_file_name=F('file'),
+        file_type=Substr(F('file'), Length('file') - 3, 4)
+    ).values(
+        'id',
+        'name',
+        'additional_file_name',
+        'file_type',
+    )
+    maket_deleted = Maket.objects.filter(
+        Q(order__order_number=order_number) &
+        ~Q(order=order) &
+        Q(file__isnull=False) |
+        Q(order=order) &
+        Q(deleted=True) &
+        ~Q(file='')
+    ).annotate(
+        name=F('order__order_number'),
+        additional_file_name=F('file'),
+        file_type=Substr(F('file'), Length('file') - 3, 4)
+    ).values(
+        'id',
+        'name',
+        'additional_file_name',
+        'file_type',
+        'order__id'
+    )
+
+    return JsonResponse({'main': list(main_files), 'deleted': list(deleted_files), 'maket': list(maket_files),
+                         'maket_deleted': list(maket_deleted)}, safe=False)
 
 
 @api_view(['POST'])
