@@ -131,6 +131,21 @@ def maket_delete(request, maket_id):
 
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
+def maket_restore(request, maket_id):
+    """
+    Delete maket file from maket table
+    :param request: maket_restore/<int:maket_id>
+    :param maket_id:
+    :return:
+    """
+    maket = Maket.objects.get(id=maket_id)
+    maket.deleted = False
+    maket.save()
+    return JsonResponse(maket_id, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def maket_show(request, maket_id):
     maket = Maket.objects.get(id=maket_id)
     try:

@@ -64,7 +64,8 @@ urlpatterns = [
 
     path('maket_list/<str:search_string>/<int:sh_deleted>/<int:id_no>', views.maket_list_info, name='maket_list'),
     path('maket_delete/<int:maket_id>', views.maket_delete, name='maket_delete'),
-    path('maket_file_save/<int:maket_id>', views.maket_file_save, name='maket_file_save'),
+    path('maket_restore/<int:maket_id>', views.maket_restore, name='maket_restore'),
+    path('maket_file_save/<int:maket_id>', views.maket_file_save, name='maket_fil8%e_save'),
     path('maket_show/<int:maket_id>', views.maket_show, name='maket_show'),
 
     path('hex_from_pantone/<str:pantone>', views.hex_from_pantone, name='hex_from_pantone'),
