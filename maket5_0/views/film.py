@@ -25,8 +25,8 @@ def film_list_for_group(request, group_id, connected):
     film_list_out = film_list.values(
         'film_number',
         'date',
-        'date_sent'
-        'status'
+        'date_sent',
+        'status',
         'groupinfilm__id'
     )
     return JsonResponse(film_list_out, safe=False)
