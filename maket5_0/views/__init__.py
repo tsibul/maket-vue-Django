@@ -10,3 +10,4 @@ from maket5_0.views.files import *
 from maket5_0.views.maket_layout import *
 from maket5_0.views.maket_list import *
 from maket5_0.views.color_filters import *
+from maket5_0.views.film import *

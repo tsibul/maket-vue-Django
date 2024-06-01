@@ -70,4 +70,5 @@ urlpatterns = [
 
     path('hex_from_pantone/<str:pantone>', views.hex_from_pantone, name='hex_from_pantone'),
 
+    path('film_list_for_group/<int:group_id>/<int:connected>', views.film_list_for_group, name='film_list_for_group'),
 ]
