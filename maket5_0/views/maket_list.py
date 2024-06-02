@@ -1,7 +1,7 @@
 import os
 
 from django.core.files import File
-from django.db.models import Count, Q, CharField, Value, F, Func
+from django.db.models import Count, Q, CharField, Value, F, Func, Subquery, OuterRef
 from django.http import JsonResponse, FileResponse
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -21,7 +21,52 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
         order_list = order_list.filter(deleted=False, maket__deleted=False)
     if search_string != 'default':
         order_list = order_search_filter(order_list, search_string)
+    temp_order_list = order_list.order_by('-order_date', '-order_number').distinct().values(
+        'id',
+        'maket_status',
+        'order_number',
+        'order_date',
+        'customer__name',
+    )
     order_list = order_list.order_by('-order_date', '-order_number')[id_no: id_no + 20]
+    maket_subquery = (Maket.objects.filter(
+        order=OuterRef('pk'),
+    ).annotate(
+            maketNumber=F('maket_number'),
+            dateCreate=Func(
+                F('date_create'),
+                Value('DD.MM.YY'),
+                function='to_char',
+                output_field=CharField()
+            ),
+            maketDeleted=F('deleted'),
+        )
+    )
+
+    temp_order_list = temp_order_list.annotate(
+        date=Func(
+            F('order_date'),
+            Value('DD.MM.YY'),
+            function='to_char',
+            output_field=CharField()
+        ),
+        maketList=Subquery(maket_subquery.values(
+            'id',
+            'maket_number',
+            'dateCreate',
+            'comment',
+            'file',
+            'maketDeleted',
+        ), output_field=CharField())
+    ).values(
+        'id',
+        'maket_status',
+        'order_number',
+        'date',
+        'customer__name',
+        'maketList',
+    )
+
     order_list = order_list.values(
         'id',
         'maket_status',
