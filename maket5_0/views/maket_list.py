@@ -95,7 +95,11 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
             'name',
         ))
         for group in maket_groups:
-            film_list = Film.objects.filter(groupinfilm__group__id=group['id'], deleted=False).order_by('-date')
+            film_list = Film.objects.filter(
+                groupinfilm__group__id=group['id'],
+                deleted=False,
+                groupinfilm__status=True,
+            ).order_by('-date')
             film_list_out = list(film_list.annotate(
                 dateCreate=Func(
                     F('date'),
@@ -110,12 +114,13 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                     output_field=CharField()
                 ),
             ).values(
+                'id',
                 'film_number',
                 'dateCreate',
                 'dateSent',
                 'status',
                 'groupinfilm__id',
-            ))
+            ).distinct())
             group['films'] = film_list_out
         if order['id'] != order_prev:
             order_prev = order['id']
