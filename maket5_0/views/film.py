@@ -22,7 +22,8 @@ def film_list_for_group(request, group_id, connected):
     if not connected:
         film_list = Film.objects.filter(
             groupinfilm__group__id=group_id,
-            deleted=False
+            deleted=False,
+            groupinfilm__status=True,
         ).order_by(
             '-date',
             '-film_number'
@@ -109,6 +110,7 @@ def group_from_film(request, group_id, film_id):
 
 def film_data_for_group(film, group_in_film):
     return {
+        'id': film.id,
         'film_number': film.film_number,
         'dateCreate': film.date.strftime('%d.%m.%y'),
         'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
