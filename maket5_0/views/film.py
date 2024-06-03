@@ -1,7 +1,6 @@
 import datetime
 
-from django.db.models import Q, Func, Value, F
-from django.forms import CharField
+from django.db.models import Q, Func, Value, F, CharField
 from django.http import JsonResponse
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
@@ -20,12 +19,26 @@ def film_list_for_group(request, group_id, connected):
     :param connected:
     :return:
     """
-    if connected:
-        film_list = Film.objects.filter(groupinfilm__group__id=group_id, deleted=False).order_by('-date')
+    if not connected:
+        film_list = Film.objects.filter(
+            groupinfilm__group__id=group_id,
+            deleted=False
+        ).order_by(
+            '-date',
+            '-film_number'
+        )
     else:
-        film_list = Film.objects.filter(~Q(groupinfilm__group__id=group_id) & Q(deleted=False)).order_by('-date')
+        film_list = Film.objects.filter(
+            (
+                    ~Q(groupinfilm__group__id=group_id) |
+                    Q(groupinfilm__status=False)
+            ) &
+            Q(deleted=False)).order_by(
+            '-date',
+            '-film_number'
+        ).distinct()
     # film_list = Film.objects.filter(groupinfilm__group__id=group_id, deleted=False).order_by('-date')
-    film_list_out = film_list.annotate(
+    film_list_out = list(film_list.annotate(
         dateCreate=Func(
             F('date'),
             Value('DD.MM.YY'),
@@ -39,13 +52,13 @@ def film_list_for_group(request, group_id, connected):
             output_field=CharField()
         ),
     ).values(
+        'id',
         'film_number',
         'dateCreate',
         'dateSent',
         'status',
-        'groupinfilm__id',
-    )
-    return JsonResponse(list(film_list_out), safe=False)
+    ))
+    return JsonResponse(film_list_out, safe=False)
 
 
 @authentication_classes([JWTAuthentication])
@@ -71,12 +84,34 @@ def group_to_film(request, group_id, film_id):
         group_in_film = GroupInFilm(group=maket_group, film=film)
     group_in_film.status = True
     group_in_film.save()
-    film_data = {
+    film_data = film_data_for_group(film, group_in_film)
+    return JsonResponse(film_data, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def group_from_film(request, group_id, film_id):
+    """
+    Remove group from film through group_in_film
+    :param request: roup_from_film/<int:group_id>/<int:film_id>
+    :param group_id:
+    :param film_id:
+    :return: disconnected film data
+    """
+    maket_group = MaketGroup.objects.get(id=group_id)
+    film = Film.objects.get(id=film_id)
+    group_in_film = GroupInFilm.objects.filter(group=maket_group, film=film).first()
+    group_in_film.status = False
+    group_in_film.save()
+    film_data = film_data_for_group(film, group_in_film)
+    return JsonResponse(film_data, safe=False)
+
+
+def film_data_for_group(film, group_in_film):
+    return {
         'film_number': film.film_number,
         'dateCreate': film.date.strftime('%d.%m.%y'),
-        'dateSent': film.date_sent.strftime('%d.%m.%y'),
+        'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
         'status': film.status,
         'groupinfilm__id': group_in_film.id,
-
     }
-    return JsonResponse(film_data, safe=False)
