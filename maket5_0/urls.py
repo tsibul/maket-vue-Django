@@ -72,4 +72,5 @@ urlpatterns = [
 
     path('film_list_for_group/<int:group_id>/<int:connected>', views.film_list_for_group, name='film_list_for_group'),
     path('group_to_film/<int:group_id>/<int:film_id>', views.group_to_film, name='group_to_film'),
+    path('group_from_film/<int:group_id>/<int:film_id>', views.group_from_film, name='group_from_film'),
 ]
