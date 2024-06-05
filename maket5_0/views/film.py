@@ -152,12 +152,13 @@ def film_list_info(request, search_string, sh_deleted, id_no):
                 'orderNumber': group.group.maket.order.order_number,
                 'orderDate': group.group.maket.order.order_date.strftime('%d.%m.%y'),
                 'printType': print_type,
+                'comment': group.comment,
                 'status': group.status,
             }
             groups.append(group)
         single_film = {
             'id': film.id,
-            'film_number': film.film_number,
+            'filmNumber': film.film_number,
             'dateCreate': film.date.strftime('%d.%m.%y'),
             'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
             'format': film.format,
