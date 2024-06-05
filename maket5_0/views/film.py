@@ -151,6 +151,7 @@ def film_list_info(request, search_string, sh_deleted, id_no):
                 'maketNumber': group.group.maket.maket_number,
                 'orderNumber': group.group.maket.order.order_number,
                 'orderDate': group.group.maket.order.order_date.strftime('%d.%m.%y'),
+                'customer': group.group.maket.order.customer.name,
                 'printType': print_type,
                 'comment': group.comment,
                 'status': group.status,
