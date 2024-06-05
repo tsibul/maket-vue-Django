@@ -80,4 +80,6 @@ urlpatterns = [
     path('film_group_from_film/<int:group_id>/<int:film_id>', views.film_group_from_film, name='film_group_from_film'),
     path('film_delete/<int:film_id>', views.film_delete, name='film_delete'),
     path('film_update/<int:film_id>', views.film_update, name='film_update'),
+    path('film_file_save/<int:film_id>', views.film_file_save, name='film_file_save'),
+    path('film_load/<int:film_id>', views.film_load, name='film_load'),
 ]

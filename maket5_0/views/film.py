@@ -1,7 +1,9 @@
 import datetime
+import os
 
+from django.core.files import File
 from django.db.models import Q, Func, Value, F, CharField
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import permission_classes, authentication_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -145,7 +147,7 @@ def film_list_info(request, search_string, sh_deleted, id_no):
     for film in film_list:
         groups_in_film = GroupInFilm.objects.filter(film=film)
         if not sh_deleted:
-            groups_in_film =  groups_in_film.filter(deleted=False)
+            groups_in_film = groups_in_film.filter(deleted=False)
         groups = []
         for group in groups_in_film:
             order_item = OrderItem.objects.filter(order=group.group.maket.order, item_group=group.group.name).first()
@@ -286,3 +288,34 @@ def film_update(request, film_id):
         'deleted': film.deleted,
     }
     return JsonResponse(result, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_file_save(request, film_id):
+    """
+    Save film file to film table
+    :param request:
+    :param film_id:
+    :return:maket_file_save/<int:maket_id>
+    """
+    film = Film.objects.get(id=film_id)
+    date_sent = '_отправлена_' + film.date_sent.strftime('%d_%m_%y') if film.date_sent else ''
+    file_name = 'Пленка_' + str(film.film_number) + '_от_' + film.date.strftime('%d_%m_%y') + date_sent  + '.cdr'
+    with open('maket5_0/files/tmp_file', 'rb') as f:
+        try:
+            os.remove('maket5_0/files/film/' + file_name)
+        except:
+            pass
+        film.file.save(file_name, File(f), save=True)
+    return JsonResponse(file_name, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_load(request, film_id):
+    film = Film.objects.get(id=film_id)
+    try:
+        return FileResponse(open(film.file.path, 'rb'), content_type='application/force-download')
+    except:
+        return None
