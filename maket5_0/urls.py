@@ -78,4 +78,6 @@ urlpatterns = [
     path('set_film_comment/<int:film_id>', views.set_film_comment, name='set_film_comment'),
     path('film_group_to_film/<int:group_id>/<int:film_id>', views.film_group_to_film, name='film_group_to_film'),
     path('film_group_from_film/<int:group_id>/<int:film_id>', views.film_group_from_film, name='film_group_from_film'),
+    path('film_delete/<int:film_id>', views.film_delete, name='film_delete'),
+    path('film_update/<int:film_id>', views.film_update, name='film_update'),
 ]

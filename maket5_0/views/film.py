@@ -172,6 +172,7 @@ def film_list_info(request, search_string, sh_deleted, id_no):
             'format': film.format,
             'file': film.file.name,
             'status': film.status,
+            'deleted': film.deleted,
             'groups': groups,
         }
         film_list_out.append(single_film)
@@ -244,3 +245,44 @@ def film_group_to_film(request, group_id, film_id):
     group_in_film.save()
     film_data = film_data_for_group(film, group_in_film)
     return JsonResponse(film_data, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_delete(request, film_id):
+    """
+    Delete film by id
+    :param request: film_delete/<int:film_id
+    :param film_id:
+    :return:
+    """
+    film = Film.objects.get(id=film_id)
+    film.deleted = not film.deleted
+    film.save()
+    result = {
+        'id': film.id,
+        'film_number': film.film_number,
+        'dateCreate': film.date.strftime('%d.%m.%y'),
+        'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
+        'status': film.status,
+        'deleted': film.deleted,
+    }
+    return JsonResponse(result, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_update(request, film_id):
+    if film_id:
+        film = Film.objects.get(id=film_id)
+    else:
+        film = Film(date=datetime.date.today())
+    result = {
+        'id': film.id,
+        'film_number': film.film_number,
+        'dateCreate': film.date.strftime('%d.%m.%y'),
+        'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
+        'status': film.status,
+        'deleted': film.deleted,
+    }
+    return JsonResponse(result, safe=False)
