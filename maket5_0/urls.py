@@ -75,4 +75,5 @@ urlpatterns = [
     path('group_from_film/<int:group_id>/<int:film_id>', views.group_from_film, name='group_from_film'),
     path('film_list/<str:search_string>/<int:sh_deleted>/<int:id_no>', views.film_list_info, name='film_list'),
     path('toggle_film_status/<int:film_id>', views.toggle_film_status, name='toggle_film_status'),
+    path('set_film_comment/<int:film_id>', views.set_film_comment, name='set_film_comment'),
 ]

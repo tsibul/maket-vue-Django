@@ -2,7 +2,8 @@ import datetime
 
 from django.db.models import Q, Func, Value, F, CharField
 from django.http import JsonResponse
-from rest_framework.decorators import permission_classes, authentication_classes
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import permission_classes, authentication_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -191,3 +192,19 @@ def toggle_film_status(request, film_id):
     film.save()
     return JsonResponse(film.id, safe=False)
 
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def set_film_comment(request, film_id):
+    """
+    Set film in group comment
+    :param request: set_film_comment/<int:film_id>
+    :param film_id:
+    :return:
+    """
+    group = GroupInFilm.objects.get(id=film_id)
+    comment = request.data['comment']
+    group.comment = comment
+    group.save()
+    return JsonResponse({'id': group.id}, safe=False)
