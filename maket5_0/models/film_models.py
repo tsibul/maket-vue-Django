@@ -5,7 +5,7 @@ from django.core.files.storage import FileSystemStorage
 
 from maket5_0.models.maket_models import MaketItem, MaketGroup
 
-fs_film = FileSystemStorage(location='maket_0/files/film')
+fs_film = FileSystemStorage(location='maket5_0/files/film')
 
 
 class Film(models.Model):
