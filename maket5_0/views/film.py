@@ -99,7 +99,7 @@ def group_to_film(request, group_id, film_id):
 def group_from_film(request, group_id, film_id):
     """
     Remove group from film through group_in_film
-    :param request: roup_from_film/<int:group_id>/<int:film_id>
+    :param request: group_from_film/<int:group_id>/<int:film_id>
     :param group_id:
     :param film_id:
     :return: disconnected film data
@@ -208,3 +208,39 @@ def set_film_comment(request, film_id):
     group.comment = comment
     group.save()
     return JsonResponse({'id': group.id}, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_group_from_film(request, group_id, film_id):
+    """
+    Remove group from film through group_in_film
+    :param request: film_group_from_film/<int:group_id>/<int:film_id>
+    :param group_id:
+    :param film_id:
+    :return: disconnected film data
+    """
+    film = Film.objects.get(id=film_id)
+    group_in_film = GroupInFilm.objects.get(id=group_id)
+    group_in_film.deleted = True
+    group_in_film.save()
+    film_data = film_data_for_group(film, group_in_film)
+    return JsonResponse(film_data, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_group_to_film(request, group_id, film_id):
+    """
+    Restore group from film
+    :param request: film_group_to_film/<int:group_id>/<int:film_id>
+    :param group_id:
+    :param film_id:
+    :return: disconnected film data
+    """
+    film = Film.objects.get(id=film_id)
+    group_in_film = GroupInFilm.objects.get(id=group_id)
+    group_in_film.deleted = False
+    group_in_film.save()
+    film_data = film_data_for_group(film, group_in_film)
+    return JsonResponse(film_data, safe=False)

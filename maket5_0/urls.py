@@ -76,4 +76,6 @@ urlpatterns = [
     path('film_list/<str:search_string>/<int:sh_deleted>/<int:id_no>', views.film_list_info, name='film_list'),
     path('toggle_film_status/<int:film_id>', views.toggle_film_status, name='toggle_film_status'),
     path('set_film_comment/<int:film_id>', views.set_film_comment, name='set_film_comment'),
+    path('film_group_to_film/<int:group_id>/<int:film_id>', views.film_group_to_film, name='film_group_to_film'),
+    path('film_group_from_film/<int:group_id>/<int:film_id>', views.film_group_from_film, name='film_group_from_film'),
 ]
