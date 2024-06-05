@@ -177,4 +177,17 @@ def film_list_info(request, search_string, sh_deleted, id_no):
     return JsonResponse(film_list_out, safe=False)
 
 
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def toggle_film_status(request, film_id):
+    """
+    Change film status
+    :param request: toggle_film_status/<int:film_id>
+    :param film_id:
+    :return:
+    """
+    film = GroupInFilm.objects.get(id=film_id)
+    film.status = not film.status
+    film.save()
+    return JsonResponse(film.id, safe=False)
 
