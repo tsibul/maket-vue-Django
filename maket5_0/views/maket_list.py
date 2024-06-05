@@ -98,7 +98,7 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
             film_list = Film.objects.filter(
                 groupinfilm__group__id=group['id'],
                 deleted=False,
-                groupinfilm__status=True,
+                groupinfilm__deleted=False,
             ).order_by('-date')
             film_list_out = list(film_list.annotate(
                 dateCreate=Func(
@@ -119,7 +119,9 @@ def maket_list_info(request, search_string, sh_deleted, id_no):
                 'dateCreate',
                 'dateSent',
                 'status',
+                'deleted',
                 'groupinfilm__id',
+                'groupinfilm__deleted',
             ).distinct())
             group['films'] = film_list_out
         if order['id'] != order_prev:

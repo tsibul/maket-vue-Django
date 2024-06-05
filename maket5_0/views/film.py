@@ -20,20 +20,23 @@ def film_list_for_group(request, group_id, connected):
     :param connected:
     :return:
     """
+    film_list = Film.objects.filter(deleted=False)
     if not connected:
-        film_list = Film.objects.filter(
+        film_list = film_list.filter(
             groupinfilm__group__id=group_id,
-            deleted=False,
-            groupinfilm__status=True,
+            groupinfilm__deleted=False,
         ).order_by(
             '-date',
             '-film_number'
         )
     else:
-        film_list = Film.objects.filter(
+        film_list = film_list.filter(
             (
-                    ~Q(groupinfilm__group__id=group_id) |
-                    Q(groupinfilm__status=False)
+                    ~Q(groupinfilm__group__id=group_id)
+                    |
+                    Q(groupinfilm__deleted=True)
+                    &
+                    Q(groupinfilm__group__id=group_id)
             ) &
             Q(deleted=False)).order_by(
             '-date',
@@ -84,7 +87,7 @@ def group_to_film(request, group_id, film_id):
     group_in_film = GroupInFilm.objects.filter(group=maket_group, film=film).first()
     if not group_in_film:
         group_in_film = GroupInFilm(group=maket_group, film=film)
-    group_in_film.status = True
+    group_in_film.deleted = False
     group_in_film.save()
     film_data = film_data_for_group(film, group_in_film)
     return JsonResponse(film_data, safe=False)
@@ -103,7 +106,7 @@ def group_from_film(request, group_id, film_id):
     maket_group = MaketGroup.objects.get(id=group_id)
     film = Film.objects.get(id=film_id)
     group_in_film = GroupInFilm.objects.filter(group=maket_group, film=film).first()
-    group_in_film.status = False
+    group_in_film.deleted = True
     group_in_film.save()
     film_data = film_data_for_group(film, group_in_film)
     return JsonResponse(film_data, safe=False)
@@ -135,11 +138,13 @@ def film_list_info(request, search_string, sh_deleted, id_no):
     if not sh_deleted:
         film_list = film_list.filter(deleted=False)
     if search_string != 'default':
-        film_list = film_search_filter(film_list, search_string)
+        film_list = film_search_filter(film_list, search_string, sh_deleted)
     film_list = film_list.order_by('-date', '-film_number')[id_no: id_no + 20]
     film_list_out = []
     for film in film_list:
         groups_in_film = GroupInFilm.objects.filter(film=film)
+        if not sh_deleted:
+            groups_in_film =  groups_in_film.filter(deleted=False)
         groups = []
         for group in groups_in_film:
             order_item = OrderItem.objects.filter(order=group.group.maket.order, item_group=group.group.name).first()
@@ -155,6 +160,7 @@ def film_list_info(request, search_string, sh_deleted, id_no):
                 'printType': print_type,
                 'comment': group.comment,
                 'status': group.status,
+                'deleted': group.deleted,
             }
             groups.append(group)
         single_film = {
