@@ -12,7 +12,7 @@ class Film(models.Model):
     film_number = models.IntegerField(default=0)
     date = models.DateField(default=datetime.date.today, blank=True)
     format = models.CharField(max_length=3, default='A5')
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(default=True)
     date_sent = models.DateField(default=None, null=True)
     file = models.FileField(storage=fs_film, null=True, blank=True)
     deleted = models.BooleanField(default=False)
@@ -56,6 +56,7 @@ class GroupInFilm(models.Model):
     film = models.ForeignKey(Film, models.SET_NULL, null=True, blank=True)
     comment = models.CharField(max_length=255, default='', blank=True, null=True)
     status = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "нанесение на пленке"
