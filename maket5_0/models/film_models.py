@@ -54,6 +54,7 @@ class GroupInFilm(models.Model):
     """If group correctly output in film"""
     group = models.ForeignKey(MaketGroup, models.SET_NULL, null=True, blank=True)
     film = models.ForeignKey(Film, models.SET_NULL, null=True, blank=True)
+    comment = models.CharField(max_length=255, default='', blank=True, null=True)
     status = models.BooleanField(default=True)
 
     class Meta:
