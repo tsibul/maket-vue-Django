@@ -22,3 +22,7 @@ def order_search_filter(orders, search_string):
         Q(orderitem__name__icontains=search_string) |
         Q(orderitem__print_name__icontains=search_string)
     ).distinct()
+
+
+def film_search_filter(film_list, search_string):
+    return film_list
