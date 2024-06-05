@@ -6,7 +6,8 @@ from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Film, MaketGroup, GroupInFilm
+from maket5_0.models import Film, MaketGroup, GroupInFilm, OrderItem, OrderPrint
+from maket5_0.views.search_filters import film_search_filter
 
 
 @authentication_classes([JWTAuthentication])
@@ -117,3 +118,55 @@ def film_data_for_group(film, group_in_film):
         'status': film.status,
         'groupinfilm__id': group_in_film.id,
     }
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_list_info(request, search_string, sh_deleted, id_no):
+    """
+    Form film list
+    :param request: film_list/<str:search_string>/<int:sh_deleted>/<int:id_no>
+    :param search_string:
+    :param sh_deleted:
+    :param id_no:
+    :return:
+    """
+    film_list = Film.objects.all()
+    if not sh_deleted:
+        film_list = film_list.filter(deleted=False)
+    if search_string != 'default':
+        film_list = film_search_filter(film_list, search_string)
+    film_list = film_list.order_by('-date', '-film_number')[id_no: id_no + 20]
+    film_list_out = []
+    for film in film_list:
+        groups_in_film = GroupInFilm.objects.filter(film=film)
+        groups = []
+        for group in groups_in_film:
+            order_item = OrderItem.objects.filter(order=group.group.maket.order, item_group=group.group.name).first()
+            print_type = OrderPrint.objects.filter(item=order_item).first().print_type.name
+            group = {
+                'id': group.id,
+                'item': group.group.name.split('()')[0],
+                'printName': group.group.name.split('()')[1],
+                'maketNumber': group.group.maket.maket_number,
+                'orderNumber': group.group.maket.order.order_number,
+                'orderDate': group.group.maket.order.order_date.strftime('%d.%m.%y'),
+                'printType': print_type,
+                'status': group.status,
+            }
+            groups.append(group)
+        single_film = {
+            'id': film.id,
+            'film_number': film.film_number,
+            'dateCreate': film.date.strftime('%d.%m.%y'),
+            'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
+            'format': film.format,
+            'file': film.file.name,
+            'status': film.status,
+            'groups': groups,
+        }
+        film_list_out.append(single_film)
+    return JsonResponse(film_list_out, safe=False)
+
+
+
