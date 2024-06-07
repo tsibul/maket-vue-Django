@@ -272,6 +272,7 @@ def film_delete(request, film_id):
     return JsonResponse(result, safe=False)
 
 
+@api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def film_update(request, film_id):
@@ -279,15 +280,24 @@ def film_update(request, film_id):
         film = Film.objects.get(id=film_id)
     else:
         film = Film(date=datetime.date.today())
+    try:
+        film.date_sent = datetime.datetime.strptime(request.data['date_sent'], '%Y-%m-%d').date()
+    except:
+        pass
+    film.film_number = request.data['film_number']
+    film.format = request.data['format']
+    film.status = request.data['status']
+    film.save()
     result = {
         'id': film.id,
-        'film_number': film.film_number,
+        'filmNumber': film.film_number,
         'dateCreate': film.date.strftime('%d.%m.%y'),
         'dateSent': film.date_sent.strftime('%d.%m.%y') if film.date_sent else None,
+        'format': film.format,
         'status': film.status,
         'deleted': film.deleted,
     }
-    return JsonResponse(result, safe=False)
+    return JsonResponse({'id': result}, safe=False)
 
 
 @authentication_classes([JWTAuthentication])
@@ -301,7 +311,7 @@ def film_file_save(request, film_id):
     """
     film = Film.objects.get(id=film_id)
     date_sent = '_отправлена_' + film.date_sent.strftime('%d_%m_%y') if film.date_sent else ''
-    file_name = 'Пленка_' + str(film.film_number) + '_от_' + film.date.strftime('%d_%m_%y') + date_sent  + '.cdr'
+    file_name = 'Пленка_' + str(film.film_number) + '_от_' + film.date.strftime('%d_%m_%y') + date_sent + '.cdr'
     with open('maket5_0/files/tmp_file', 'rb') as f:
         try:
             os.remove('maket5_0/files/film/' + file_name)
