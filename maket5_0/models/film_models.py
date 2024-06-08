@@ -56,7 +56,7 @@ class GroupInFilm(models.Model):
     film = models.ForeignKey(Film, models.SET_NULL, null=True, blank=True)
     comment = models.CharField(max_length=255, default='', blank=True, null=True)
     status = models.BooleanField(default=True)
-    deleted = models.BooleanField(default=False )
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "нанесение на пленке"
