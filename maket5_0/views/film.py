@@ -4,7 +4,6 @@ import os
 from django.core.files import File
 from django.db.models import Q, Func, Value, F, CharField
 from django.http import JsonResponse, FileResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import permission_classes, authentication_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -150,22 +149,8 @@ def film_list_info(request, search_string, sh_deleted, id_no):
             groups_in_film = groups_in_film.filter(deleted=False)
         groups = []
         for group in groups_in_film:
-            order_item = OrderItem.objects.filter(order=group.group.maket.order, item_group=group.group.name).first()
-            print_type = OrderPrint.objects.filter(item=order_item).first().print_type.name
-            group = {
-                'id': group.id,
-                'item': group.group.name.split('()')[0],
-                'printName': group.group.name.split('()')[1],
-                'maketNumber': group.group.maket.maket_number,
-                'orderNumber': group.group.maket.order.order_number,
-                'orderDate': group.group.maket.order.order_date.strftime('%d.%m.%y'),
-                'customer': group.group.maket.order.customer.name,
-                'printType': print_type,
-                'comment': group.comment,
-                'status': group.status,
-                'deleted': group.deleted,
-            }
-            groups.append(group)
+            group_data = group_data_out(group)
+            groups.append(group_data)
         single_film = {
             'id': film.id,
             'filmNumber': film.film_number,
@@ -329,3 +314,80 @@ def film_load(request, film_id):
         return FileResponse(open(film.file.path, 'rb'), content_type='application/force-download')
     except:
         return None
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def maket_group_list_not_in_film(request):
+    """
+
+    :param request: maket_group_list_not_in_film
+    :return:
+    """
+    groups = MaketGroup.objects.filter(
+        Q(show=True) &
+        Q(maket__deleted=False) &
+        Q(maket__order__deleted=False) &
+        (Q(groupinfilm__isnull=True) |
+         Q(groupinfilm__status=False) |
+         Q(groupinfilm__deleted=True))
+    ).annotate(
+        maketNo=F('maket__maket_number'),
+        comment=F('maket__comment'),
+        order=F('maket__order__order_number'),
+        customer=F('maket__order__customer__name')
+    ).values(
+        'id',
+        'name',
+        'customer',
+        'order',
+        'maketNo',
+        'comment'
+    ).distinct()
+    group_list = list(groups)
+    return JsonResponse(group_list, safe=False)
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def film_update_with_list(request, film_id):
+    """
+    Receive array with maket films id connect all of them to film
+    :param request: film_update_with_list/<int:film_id>
+    :param film_id:
+    :return:
+    """
+    film = Film.objects.get(id=film_id)
+    checked_groups = request.data['checked']
+    groups = MaketGroup.objects.filter(id__in=checked_groups)
+    group_list = []
+    for group in groups:
+        group_in_film = GroupInFilm.objects.filter(group=group, film=film).first()
+        if group_in_film:
+            group_in_film.deleted = False
+            group_in_film.status = True
+        else:
+            group_in_film = GroupInFilm(group=group, film=film)
+        group_in_film.save()
+        group_data = group_data_out(group_in_film)
+        group_list.append(group_data)
+    return JsonResponse({'id': group_list}, safe=False)
+
+
+def group_data_out(group):
+    order_item = OrderItem.objects.filter(order=group.group.maket.order, item_group=group.group.name).first()
+    print_type = OrderPrint.objects.filter(item=order_item).first().print_type.name
+    return {
+        'id': group.id,
+        'item': group.group.name.split('()')[0],
+        'printName': group.group.name.split('()')[1],
+        'maketNumber': group.group.maket.maket_number,
+        'orderNumber': group.group.maket.order.order_number,
+        'orderDate': group.group.maket.order.order_date.strftime('%d.%m.%y'),
+        'customer': group.group.maket.order.customer.name,
+        'printType': print_type,
+        'comment': group.comment,
+        'status': group.status,
+        'deleted': group.deleted,
+    }

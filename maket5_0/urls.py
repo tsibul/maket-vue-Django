@@ -82,4 +82,6 @@ urlpatterns = [
     path('film_update/<int:film_id>', views.film_update, name='film_update'),
     path('film_file_save/<int:film_id>', views.film_file_save, name='film_file_save'),
     path('film_load/<int:film_id>', views.film_load, name='film_load'),
+    path('maket_group_list_not_in_film',views.maket_group_list_not_in_film, name='maket_group_list_not_in_film'),
+    path('film_update_with_list/<int:film_id>', views.film_update_with_list, name='film_update_with_list'),
 ]
