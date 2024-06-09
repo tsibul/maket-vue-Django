@@ -116,6 +116,7 @@ class OrderItem(models.Model):
     print_price = models.FloatField(default=0)
     num_prints = models.IntegerField(default=0)
     item_group = models.CharField(max_length=255, blank=True, null=True)
+    if_print = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Номенклатура заказа'
