@@ -11,7 +11,7 @@ def maket_layout_data(order_id, maket_id):
     group_layout = group_layout_data(maket_id, order_id)
     header_info = maket_header_info(order)
     footer_info = maket_footer_info(order)
-    order_items = OrderItem.objects.filter(order__id=order_id).order_by('code')
+    order_items = OrderItem.objects.filter(order__id=order_id, if_print=True).order_by('code')
     item_groups = maket_order_items(order_items, maket_id)
     item_groups_sorted = {k: sort_by_article(v) for k, v in item_groups.items()}
     show_groups = maket_show_groups_data(maket_id, item_groups_sorted)
