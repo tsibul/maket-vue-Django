@@ -60,7 +60,7 @@ def order_item_import(tr_strings, order):
     items = {}
     for i in order_body:
         tr_len = len(tr_strings[i])
-        if tr_strings[i][tr_len - 1] == '1sec_endofline' and tr_strings[i][3] != '\xa0':
+        if tr_strings[i][tr_len - 1] == '1sec_endofline':
             item = OrderItem(order=order)
             item.item_from_order_import(i, tr_strings)
             item.save()
