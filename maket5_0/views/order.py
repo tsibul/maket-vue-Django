@@ -41,7 +41,7 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         maketQuantity=Count('maket__order',
                             filter=Q(maket__deleted=False) & Q(maket__file__isnull=False) & ~Q(maket__file='')),
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
-        maketId=Min('maket__id')
+        maketId=Min('maket__id', filter=Q(maket__deleted=False)),
     )
     return JsonResponse(list(orders_out), safe=False)
 
