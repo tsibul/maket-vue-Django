@@ -125,7 +125,7 @@ class OrderItem(models.Model):
         db_table = 'order_item'
 
     def save(self, *args, **kwargs):
-        if not self.item_group:
+        if not self.item_group and self.print_name:
             self.item_group = self.code.split('.')[0] + '()' + self.print_name
         super(OrderItem, self).save(*args, **kwargs)
 

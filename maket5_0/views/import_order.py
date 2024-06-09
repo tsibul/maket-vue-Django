@@ -118,8 +118,9 @@ def calculate_prices(ord_imp):
         prt_quantity = len(prts_for_price)
         prt_price = prts_for_price.aggregate(total=Sum('print_price'))['total']
         gross_prt_quantity = gross_prt_quantity + prt_quantity * item.quantity
-        gross_prt_price = gross_prt_price + prt_price * item.quantity
-        item.print_price = prt_price
+        if prt_price:
+            gross_prt_price = gross_prt_price + prt_price * item.quantity
+        item.print_price = prt_price if prt_price else 0
         item.num_prints = prt_quantity
         item.save()
     ord_imp.print_quantity = gross_prt_quantity
