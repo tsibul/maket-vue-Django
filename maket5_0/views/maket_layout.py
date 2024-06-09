@@ -7,8 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from maket5_0.models import Maket, Order, OrderItem, Good, Color, MaketGroup, OrderPrint, PrintPosition, MaketPrint, \
     PrintColor
-from maket5_0.service_functions import maket_header_info, maket_footer_info, maket_order_items, \
-    sort_by_article, maket_show_groups_data, maket_group_patterns_images, maket_tech_info, group_layout_data
+from maket5_0.service_functions import  maket_layout_data
 
 
 @authentication_classes([JWTAuthentication])
@@ -40,29 +39,7 @@ def maket_info(request, maket_id, order_id):
     :param request:maket_info/<int:maket_id>/<int:order_id>
     :return:
     """
-    order = Order.objects.get(id=order_id)
-
-    tech_info, before_footer = maket_tech_info(maket_id, order_id)
-    group_layout = group_layout_data(maket_id, order_id)
-    header_info = maket_header_info(order)
-    footer_info = maket_footer_info(order)
-    order_items = OrderItem.objects.filter(order__id=order_id).order_by('code')
-    item_groups = maket_order_items(order_items, maket_id)
-    item_groups_sorted = {k: sort_by_article(v) for k, v in item_groups.items()}
-    show_groups = maket_show_groups_data(maket_id, item_groups_sorted)
-    group_patterns, group_images = maket_group_patterns_images(item_groups_sorted)
-    result = {
-        'headerInfo': header_info,
-        'footerInfo': footer_info,
-        'itemGroups': item_groups_sorted,
-        'showGroups': show_groups,
-        'groupPatterns': group_patterns,
-        'groupImages': group_images,
-        'techInfo': tech_info,
-        'beforeFooter': before_footer,
-        'groupLayoutData': group_layout,
-    }
-    return JsonResponse(result, safe=False)
+    return JsonResponse(maket_layout_data(order_id, maket_id), safe=False)
 
 
 @api_view(['POST'])
@@ -170,4 +147,5 @@ def maket_save(request):
                     print_color = PrintColor.objects.get(id=color['id'])
                     print_color.pantone = color['pantone']
                     print_color.save()
-    return JsonResponse({'id': maket.id}, safe=False)
+    return JsonResponse({'id': maket_layout_data(order_id, maket.id)}, safe=False)
+
