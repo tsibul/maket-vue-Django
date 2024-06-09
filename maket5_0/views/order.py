@@ -43,29 +43,32 @@ def show_orders(request, order, id_no, search_string, sh_deleted):
         files=Count('additionalfile__order', filter=Q(additionalfile__deleted=False)),
         maketId=Min('maket__id', filter=Q(maket__deleted=False)),
     )
+    order_list = list(orders_out)
+    for order in order_list:
+        order['items'] = item_list_for_order(order['pk'])
     return JsonResponse(list(orders_out), safe=False)
 
 
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-def item_list(request, pk):
-    items = OrderItem.objects.filter(order__id=pk)
-    json_data = []
-    for item in items:
-        prints = list(
-            OrderPrint.objects.filter(item=item).values('type', 'print_place__name', 'colors', 'second_pass',
-                                                        'print_price'))
-        items_out = {
-            'print_no': item.print_no,
-            'code': item.code,
-            'name': item.name,
-            'print_name': item.print_name,
-            'item_price': item.item_price,
-            'quantity': item.quantity,
-            'prints': prints
-        }
-        json_data.append(items_out)
-    return JsonResponse(json_data, safe=False)
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
+# def item_list(request, pk):
+#     items = OrderItem.objects.filter(order__id=pk)
+#     json_data = []
+#     for item in items:
+#         prints = list(
+#             OrderPrint.objects.filter(item=item).values('type', 'print_place__name', 'colors', 'second_pass',
+#                                                         'print_price'))
+#         items_out = {
+#             'print_no': item.print_no,
+#             'code': item.code,
+#             'name': item.name,
+#             'print_name': item.print_name,
+#             'item_price': item.item_price,
+#             'quantity': item.quantity,
+#             'prints': prints
+#         }
+#         json_data.append(items_out)
+#     return JsonResponse(json_data, safe=False)
 
 
 @api_view(['GET'])
@@ -91,8 +94,9 @@ def import_order(request):
         'customer__name': imported_order.customer.name,
         'manager__name': imported_order.manager.name,
         'manager__mail': imported_order.manager.mail,
-        'order_date': imported_order.order_date
+        'order_date': imported_order.order_date,
     }
+    order_out['items'] = item_list_for_order(imported_order.id)
     return JsonResponse(order_out, safe=False)
 
 
@@ -103,3 +107,22 @@ def delete_order(request, order_no):
     order.deleted = True
     order.save()
     return JsonResponse({'id': order.id})
+
+def item_list_for_order(pk):
+    items = OrderItem.objects.filter(order__id=pk)
+    json_data = []
+    for item in items:
+        prints = list(
+            OrderPrint.objects.filter(item=item).values('type', 'print_place__name', 'colors', 'second_pass',
+                                                        'print_price'))
+        items_out = {
+            'print_no': item.print_no,
+            'code': item.code,
+            'name': item.name,
+            'print_name': item.print_name,
+            'item_price': item.item_price,
+            'quantity': item.quantity,
+            'prints': prints
+        }
+        json_data.append(items_out)
+    return json_data
