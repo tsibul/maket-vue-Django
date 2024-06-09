@@ -1,9 +1,32 @@
 from django.db.models import Func, F, Value, CharField
 
 from maket5_0.models import OrderPrint, PrintColor, Good, DetailImage, PrintPlaceToPrintPosition, Maket, MaketGroup, \
-    OrderItem, MaketPrint
+    OrderItem, MaketPrint, Order
 from maket5_0.service_functions import check_printable
 
+
+def maket_layout_data(order_id, maket_id):
+    order = Order.objects.get(id=order_id)
+    tech_info, before_footer = maket_tech_info(maket_id, order_id)
+    group_layout = group_layout_data(maket_id, order_id)
+    header_info = maket_header_info(order)
+    footer_info = maket_footer_info(order)
+    order_items = OrderItem.objects.filter(order__id=order_id).order_by('code')
+    item_groups = maket_order_items(order_items, maket_id)
+    item_groups_sorted = {k: sort_by_article(v) for k, v in item_groups.items()}
+    show_groups = maket_show_groups_data(maket_id, item_groups_sorted)
+    group_patterns, group_images = maket_group_patterns_images(item_groups_sorted)
+    return {
+        'headerInfo': header_info,
+        'footerInfo': footer_info,
+        'itemGroups': item_groups_sorted,
+        'showGroups': show_groups,
+        'groupPatterns': group_patterns,
+        'groupImages': group_images,
+        'techInfo': tech_info,
+        'beforeFooter': before_footer,
+        'groupLayoutData': group_layout,
+    }
 
 def maket_header_info(order):
     """
@@ -256,7 +279,8 @@ def maket_tech_info(maket_id, order_id):
     """
     maket_list = list(
         Maket.objects.filter(
-            order__id=order_id
+            order__id=order_id,
+            deleted=False
         ).annotate(
             date=Func(
                 F('date_create'),
@@ -271,7 +295,7 @@ def maket_tech_info(maket_id, order_id):
             'date'
         )
     )
-    maket = Maket.objects.filter(id=maket_id).first()
+    maket = Maket.objects.filter(id=maket_id, deleted=False).first()
     if maket:
         tech_info = {
             'formatSelected': maket.format_selected,
