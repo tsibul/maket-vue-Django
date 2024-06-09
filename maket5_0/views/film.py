@@ -343,7 +343,7 @@ def maket_group_list_not_in_film(request):
         'order',
         'maketNo',
         'comment'
-    ).distinct()
+    ).distinct().order_by('-maket__order__order_date')
     group_list = list(groups)
     return JsonResponse(group_list, safe=False)
 
