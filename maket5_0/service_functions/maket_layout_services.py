@@ -260,7 +260,7 @@ def maket_tech_info(maket_id, order_id):
         ).annotate(
             date=Func(
                 F('date_create'),
-                Value('MM.DD.YYYY'),
+                Value('DD.MM.YYYY'),
                 function='TO_CHAR',
                 output_field=CharField()
             )
