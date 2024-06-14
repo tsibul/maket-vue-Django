@@ -122,6 +122,7 @@ def item_list_for_order(pk):
                 'print_type__printable',
                 'print_price'))
         items_out = {
+            'id': item.id,
             'print_no': item.print_no,
             'code': item.code,
             'name': item.name,
