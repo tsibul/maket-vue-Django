@@ -163,3 +163,10 @@ def fix_order_errors(request):
         order.save()
 
     return JsonResponse({'id': result}, safe=False)
+
+
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def reset_order(request, order_id):
+    order = Order.objects.get(pk=order_id)
+    return JsonResponse({'id': order.id})
