@@ -4,7 +4,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from maket5_0.models import Order, OrderItem, OrderPrint
+from maket5_0.models import Order, OrderItem, OrderPrint, Maket, MaketGroup, GroupInFilm
 from maket5_0.views import parse_order_html, old_order_delete, update_customer_manager, calculate_prices, \
     order_item_import
 from maket5_0.views.search_filters import order_search_filter
@@ -169,4 +169,8 @@ def fix_order_errors(request):
 @permission_classes([IsAuthenticated])
 def reset_order(request, order_id):
     order = Order.objects.get(pk=order_id)
+    order.maket_status = 'N'
+    maket_list = Maket.objects.filter(order=order)
+    maket_group_list = MaketGroup.objects.filter(maket__in=maket_list)
+    group_in_film_list = GroupInFilm.objects.filter(group__in=maket_group_list)
     return JsonResponse({'id': order.id})
