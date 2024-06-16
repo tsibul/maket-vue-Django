@@ -173,4 +173,10 @@ def reset_order(request, order_id):
     maket_list = Maket.objects.filter(order=order)
     maket_group_list = MaketGroup.objects.filter(maket__in=maket_list)
     group_in_film_list = GroupInFilm.objects.filter(group__in=maket_group_list)
+    for group in group_in_film_list:
+        group.delete()
+    for maket_group in maket_group_list:
+        maket_group.delete()
+    for maket in maket_list:
+        maket.delete()
     return JsonResponse({'id': order.id})
