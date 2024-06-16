@@ -9,7 +9,7 @@ fs_additional = FileSystemStorage(location='maket5_0/files/additional')
 
 class AdditionalFile(SettingsDictionary):
     """Additional files"""
-    additional_file = models.FileField(storage=fs_additional, null=True, blank=True)
+    file = models.FileField(storage=fs_additional, null=True, blank=True)
     additional_file_name = models.FilePathField(max_length=255)
     file_type = models.CharField(max_length=8, null=True, blank=True, default='pdf')
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
