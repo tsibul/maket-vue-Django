@@ -32,7 +32,7 @@ urlpatterns = [
     path('order/<int:id_no>/<str:order>/<str:search_string>/<int:sh_deleted>',
          views.show_orders, name='orders'),
     path('delete_order/<int:order_no>', views.delete_order, name='delete_order'),
-    path('reset_order/<int:order_no>', views.reset_order, name='reset_order'),
+    path('reset_order/<int:order_id>', views.reset_order, name='reset_order'),
     path('import_file', views.import_file, name='import_order'),
     path('fix_order_errors', views.fix_order_errors, name='fix_order_errors'),
 
