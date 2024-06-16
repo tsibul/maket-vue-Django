@@ -179,4 +179,5 @@ def reset_order(request, order_id):
         maket_group.delete()
     for maket in maket_list:
         maket.delete()
+    order.save()
     return JsonResponse({'id': order.id})
