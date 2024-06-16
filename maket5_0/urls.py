@@ -28,7 +28,6 @@ urlpatterns = [
     path('order/<int:id_no>/<str:order>/<str:search_string>/<int:sh_deleted>',
          views.show_orders, name='orders'),
     # path('item_list/<int:pk>', views.item_list, name='item_list'),
-    path('import_order', views.import_order, name='import_order'),
     path('delete_order/<int:order_no>', views.delete_order, name='delete_order'),
     path('import_file', views.import_file, name='import_order'),
     # Additional Files
@@ -38,6 +37,7 @@ urlpatterns = [
     path('delete_additional_file/<int:file_no>', views.delete_additional_file, name='delete_additional_file'),
     path('reconnect_additional_file/<int:file_no>/<int:order_pk>', views.reconnect_additional_file,
          name='reconnect_additional_file'),
+    path('fix_order_errors', views.fix_order_errors, name='fix_order_errors'),
 
     path('pattern_show/<int:file_pk>/<str:file_name>', views.pattern_show, name='pattern_show'),
 

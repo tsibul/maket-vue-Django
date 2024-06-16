@@ -129,7 +129,37 @@ def item_list_for_order(pk):
             'print_name': item.print_name,
             'item_price': item.item_price,
             'quantity': item.quantity,
-            'prints': prints
+            'prints': prints,
+            'printsId': item.id,
         }
         json_data.append(items_out)
     return json_data
+
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def fix_order_errors(request):
+    """
+    change connection between OrderItems & PrintItems
+    :param request: fix_order_errors
+    :return:
+    """
+    result = False
+    changed_items = request.data
+    new_changed_items = {}
+    for item_key in changed_items.keys():
+        if int(item_key) != changed_items[item_key]:
+            result = True
+            new_changed_items[item_key] = list(OrderPrint.objects.filter(item__id=changed_items[item_key]))
+    for item_key in new_changed_items.keys():
+        for print_item in new_changed_items[item_key]:
+            item = OrderItem.objects.get(id=item_key)
+            print_item.item = item
+            print_item.save()
+    if result:
+        order = Order.objects.get(orderitem__id=int(list(changed_items.keys())[0]))
+        order.to_check = False
+        order.save()
+
+    return JsonResponse({'id': result}, safe=False)
