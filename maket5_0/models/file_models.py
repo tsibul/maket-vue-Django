@@ -25,6 +25,10 @@ class AdditionalFile(SettingsDictionary):
         self.file_type = pathlib.Path(str(self.additional_file_name)).suffix
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        self.additional_file.delete(save=False)
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         return self.name + ' ' + self.additional_file_name
 

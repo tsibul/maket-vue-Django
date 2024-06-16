@@ -24,6 +24,10 @@ class Film(models.Model):
         db_table_comment = 'Film'
         db_table = 'film'
 
+    def delete(self, *args, **kwargs):
+        self.file.delete(save=False)
+        super().delete(*args, **kwargs)
+
     def __repr__(self):
         return str(self.film_number) + ' от ' + str(self.date)
 

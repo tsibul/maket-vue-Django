@@ -30,6 +30,10 @@ class Maket(models.Model):
         db_table_comment = 'Maket'
         db_table = 'maket'
 
+    def delete(self, *args, **kwargs):
+        self.file.delete(save=False)
+        super().delete(*args, **kwargs)
+
     def __repr__(self):
         return self.order.order_number
 
