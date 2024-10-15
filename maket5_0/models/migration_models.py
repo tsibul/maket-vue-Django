@@ -6,6 +6,7 @@ fs_films_m = FileSystemStorage(location='files_m/films')
 fs_additional_m = FileSystemStorage(location='files_m/additional')
 fs_patterns_m = FileSystemStorage(location='files_m/patterns')
 fs_orders_m = FileSystemStorage(location='files_m/orders')
+fs_makety_m = FileSystemStorage(location='files_m/makety')
 
 
 class Z_Customer_types(models.Model):
@@ -374,3 +375,44 @@ class Z_Additional_Files(models.Model):
     def __str__(self):
         return str(self.additional_file.name)
 
+
+class Z_Makety(models.Model):
+    date_create = models.DateField(blank=True)
+    date_modified = models.DateField(blank=True, null=True)
+    maket_id = models.SmallIntegerField(default=0)
+    uploaded = models.BooleanField(default=False)
+    maket_file = models.FileField(storage=fs_makety_m, null=True, blank=True)
+    comment = models.CharField(max_length=255, default='')
+    order = models.ForeignKey(Z_Order_imports, on_delete=models.CASCADE, null=True)
+    order_num = models.CharField(max_length=18, blank=True, null=True)
+    order_date = models.DateField(default='1000-01-01')
+
+    def __repr__(self):
+        return self.order.order_id
+
+    def __str__(self):
+        return str(self.order.order_id + ' ' + self.order.customer.name)
+
+
+class Z_Itemgroup_in_Maket(models.Model):
+    """If item from order exists in Maket"""
+    item = models.ForeignKey(Z_Item_imports, on_delete=models.CASCADE, null=True, blank=True)
+    maket = models.ForeignKey(Z_Makety, on_delete=models.CASCADE, null=True, blank=True)
+    checked = models.BooleanField(default=True)
+    print_name = models.CharField(max_length=50,  null=True, blank=True)
+    film = models.ForeignKey(Z_Films, models.SET_NULL, blank=True, null=True)
+    film_error = models.BooleanField(default=True)
+
+    def __repr__(self):
+        return str(self.maket.order_num + ' ' + self.item.item.print_group.name)
+
+    def __str__(self):
+        return str(self.maket.order_num + ' ' + self.item.item.print_group.name)
+
+
+class Z_Print_in_Maket(models.Model):
+    """If print item shows big in Maket"""
+    print_item = models.ForeignKey(Z_Print_imports, models.SET_NULL, null=True, blank=True)
+    maket = models.ForeignKey(Z_Makety, on_delete=models.CASCADE, null=True, blank=True)
+    checked = models.BooleanField(default=True)
+    option = models.SmallIntegerField(default=1)
