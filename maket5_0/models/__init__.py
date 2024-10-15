@@ -14,5 +14,6 @@ from maket5_0.models.order_models import *
 from maket5_0.models.maket_models import *
 from maket5_0.models.film_models import *
 from maket5_0.models.file_models import *
+from maket5_0.models.migration_models import *
 
 
